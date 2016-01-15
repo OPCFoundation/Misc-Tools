@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Opc.Ua.CertificateGenerator", "UA Certificate Generator.vcxproj", "{6FE9C227-FC41-4C31-A5AA-7E381EFAAB38}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "stack\core\opcua_core.vcxproj", "{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stackcore", "stack\stackcore\opcua_stackcore.vcxproj", "{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UA-Stack", "UA-Stack", "{D3DE5C44-26FE-48D2-92B5-E289A3A96771}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UA AnsiC Win32 Platform Layer", "stack\platforms\win32\UA AnsiC Win32 Platform Layer.vcxproj", "{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FE9C227-FC41-4C31-A5AA-7E381EFAAB38}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6FE9C227-FC41-4C31-A5AA-7E381EFAAB38}.Debug|Win32.Build.0 = Debug|Win32
+		{6FE9C227-FC41-4C31-A5AA-7E381EFAAB38}.Release|Win32.ActiveCfg = Release|Win32
+		{6FE9C227-FC41-4C31-A5AA-7E381EFAAB38}.Release|Win32.Build.0 = Release|Win32
+		{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}.Debug|Win32.Build.0 = Debug|Win32
+		{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}.Release|Win32.ActiveCfg = Release|Win32
+		{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}.Release|Win32.Build.0 = Release|Win32
+		{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C}.Debug|Win32.Build.0 = Debug|Win32
+		{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C}.Release|Win32.ActiveCfg = Release|Win32
+		{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C}.Release|Win32.Build.0 = Release|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Debug|Win32.Build.0 = Debug|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Release|Win32.ActiveCfg = Release|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79} = {D3DE5C44-26FE-48D2-92B5-E289A3A96771}
+		{FB97E4C7-F549-3FC6-99F1-4D194AEDA64C} = {D3DE5C44-26FE-48D2-92B5-E289A3A96771}
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6} = {D3DE5C44-26FE-48D2-92B5-E289A3A96771}
+	EndGlobalSection
+EndGlobal
