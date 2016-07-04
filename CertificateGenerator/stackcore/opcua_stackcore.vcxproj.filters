@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{04817076-7bab-4b57-b76d-88ec0afbe72c}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{4dd64439-f091-4ae6-a22a-ca59d2a600bb}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="opcua_binarydecoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_binaryencoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_builtintypes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_connection.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_crypto.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_decoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_encodeableobject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_encoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_enumeratedtype.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_extensionobject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_listener.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_messagecontext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_pki.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_stream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_stringtable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_types.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opcua_attributes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_binaryencoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_binaryencoderinternal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_browsenames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_builtintypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_credentials.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_crypto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_decoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_encodeableobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_encoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_enumeratedtype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_extensionobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_identifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_listener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_messagecontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_pki.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_securechannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_stringtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

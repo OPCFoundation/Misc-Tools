@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}</ProjectGuid>
+    <RootNamespace>UAAnsiCWin32PlatformLayer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>opcua_win32</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\bin\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)intermediate\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\..\bin\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)intermediate\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\;..\..\core;..\..\stackcore;..\..\..\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;LIBXML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ProgramDataBaseFileName>$(OutDir)opcua_win32.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4001</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)opcua_win32.lib</OutputFile>
+    </Lib>
+    <Xdcmake>
+      <OutputFile>$(OutDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\;..\..\core;..\..\stackcore;..\..\..\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;LIBXML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ProgramDataBaseFileName>$(OutDir)opcua_win32.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4001</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)opcua_win32.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="opcua_p_binary.c" />
+    <ClCompile Include="opcua_p_cryptofactory.c" />
+    <ClCompile Include="opcua_p_datetime.c" />
+    <ClCompile Include="opcua_p_guid.c" />
+    <ClCompile Include="opcua_p_interface.c" />
+    <ClCompile Include="opcua_p_internal.c" />
+    <ClCompile Include="opcua_p_libxml2.c" />
+    <ClCompile Include="opcua_p_libxml2_xmlreader.c" />
+    <ClCompile Include="opcua_p_libxml2_xmlwriter.c" />
+    <ClCompile Include="opcua_p_memory.c" />
+    <ClCompile Include="opcua_p_mutex.c" />
+    <ClCompile Include="opcua_p_openssl.c" />
+    <ClCompile Include="opcua_p_openssl_3des.c" />
+    <ClCompile Include="opcua_p_openssl_aes.c" />
+    <ClCompile Include="opcua_p_openssl_ecdsa.c" />
+    <ClCompile Include="opcua_p_openssl_hmac_sha.c" />
+    <ClCompile Include="opcua_p_openssl_pki.c" />
+    <ClCompile Include="opcua_p_openssl_random.c" />
+    <ClCompile Include="opcua_p_openssl_rsa.c" />
+    <ClCompile Include="opcua_p_openssl_sha.c" />
+    <ClCompile Include="opcua_p_openssl_x509.c" />
+    <ClCompile Include="opcua_p_pki_nosecurity.c" />
+    <ClCompile Include="opcua_p_pkifactory.c" />
+    <ClCompile Include="opcua_p_securitypolicy_none.c" />
+    <ClCompile Include="opcua_p_semaphore.c" />
+    <ClCompile Include="opcua_p_socket.c" />
+    <ClCompile Include="opcua_p_socket_interface.c" />
+    <ClCompile Include="opcua_p_socket_internal.c" />
+    <ClCompile Include="opcua_p_string.c" />
+    <ClCompile Include="opcua_p_thread.c" />
+    <ClCompile Include="opcua_p_timer.c" />
+    <ClCompile Include="opcua_p_trace.c" />
+    <ClCompile Include="opcua_p_utilities.c" />
+    <ClCompile Include="opcua_p_win32_pki.c" />
+    <ClCompile Include="opcua_p_wincrypt_random.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opcua_p_binary.h" />
+    <ClInclude Include="opcua_p_compilerinfo.h" />
+    <ClInclude Include="opcua_p_crypto.h" />
+    <ClInclude Include="opcua_p_cryptofactory.h" />
+    <ClInclude Include="opcua_p_datetime.h" />
+    <ClInclude Include="opcua_p_guid.h" />
+    <ClInclude Include="opcua_p_interface.h" />
+    <ClInclude Include="opcua_p_internal.h" />
+    <ClInclude Include="opcua_p_libxml2.h" />
+    <ClInclude Include="opcua_p_memory.h" />
+    <ClInclude Include="opcua_p_mutex.h" />
+    <ClInclude Include="opcua_p_openssl.h" />
+    <ClInclude Include="opcua_p_openssl_pki.h" />
+    <ClInclude Include="opcua_p_pki.h" />
+    <ClInclude Include="opcua_p_pki_nosecurity.h" />
+    <ClInclude Include="opcua_p_pkifactory.h" />
+    <ClInclude Include="opcua_p_securitypolicy_none.h" />
+    <ClInclude Include="opcua_p_semaphore.h" />
+    <ClInclude Include="opcua_p_socket.h" />
+    <ClInclude Include="opcua_p_socket_interface.h" />
+    <ClInclude Include="opcua_p_socket_internal.h" />
+    <ClInclude Include="opcua_p_string.h" />
+    <ClInclude Include="opcua_p_thread.h" />
+    <ClInclude Include="opcua_p_timer.h" />
+    <ClInclude Include="opcua_p_trace.h" />
+    <ClInclude Include="opcua_p_types.h" />
+    <ClInclude Include="opcua_p_utilities.h" />
+    <ClInclude Include="opcua_p_win32_pki.h" />
+    <ClInclude Include="opcua_p_wincrypt.h" />
+    <ClInclude Include="opcua_platformdefs.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

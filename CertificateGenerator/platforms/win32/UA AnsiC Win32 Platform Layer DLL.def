@@ -1,0 +1,5 @@
+LIBRARY	    "opcua_win32"
+
+EXPORTS
+            OpcUa_P_Initialize
+            OpcUa_P_Clean

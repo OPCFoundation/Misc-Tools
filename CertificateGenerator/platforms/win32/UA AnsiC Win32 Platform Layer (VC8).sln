@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UA AnsiC Win32 Platform Layer", "UA AnsiC Win32 Platform Layer (VC8).vcproj", "{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C157AD3-C7D6-4836-80A0-32170243EA2A} = {2C157AD3-C7D6-4836-80A0-32170243EA2A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UA AnsiC Win32 Platform Layer DLL", "UA AnsiC Win32 Platform Layer DLL (VC8).vcproj", "{2C157AD3-C7D6-4836-80A0-32170243EA2A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Debug|Win32.Build.0 = Debug|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Release|Win32.ActiveCfg = Release|Win32
+		{AA4FD480-DA45-44D0-8F1C-CF54FC3010D6}.Release|Win32.Build.0 = Release|Win32
+		{2C157AD3-C7D6-4836-80A0-32170243EA2A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C157AD3-C7D6-4836-80A0-32170243EA2A}.Debug|Win32.Build.0 = Debug|Win32
+		{2C157AD3-C7D6-4836-80A0-32170243EA2A}.Release|Win32.ActiveCfg = Release|Win32
+		{2C157AD3-C7D6-4836-80A0-32170243EA2A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

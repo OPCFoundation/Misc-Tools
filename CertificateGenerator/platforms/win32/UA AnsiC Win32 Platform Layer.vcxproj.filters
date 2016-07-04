@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="opcua_p_binary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_cryptofactory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_datetime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_guid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_interface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_internal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_libxml2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_libxml2_xmlreader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_libxml2_xmlwriter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_mutex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_3des.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_aes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_ecdsa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_hmac_sha.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_pki.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_random.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_rsa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_sha.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_x509.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_pki_nosecurity.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_pkifactory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_securitypolicy_none.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_semaphore.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_socket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_socket_interface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_socket_internal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_thread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_timer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_trace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_utilities.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_win32_pki.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_wincrypt_random.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opcua_p_binary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_compilerinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_crypto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_cryptofactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_datetime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_libxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_openssl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_openssl_pki.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_pki.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_pki_nosecurity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_pkifactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_securitypolicy_none.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_semaphore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_socket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_socket_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_socket_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_trace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_win32_pki.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_p_wincrypt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_platformdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

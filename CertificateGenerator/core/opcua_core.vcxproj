@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>core</ProjectName>
+    <ProjectGuid>{B86767FA-5BD7-3CBC-BDAB-B8A448D23E79}</ProjectGuid>
+    <RootNamespace>core</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v140_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\bin\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)intermediate\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\bin\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)intermediate\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\;..\platforms\win32;..\stackcore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_UA_STACK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4001</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+    </Lib>
+    <Xdcmake>
+      <OutputFile>$(OutDir)docs\$(TargetName).xml</OutputFile>
+    </Xdcmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\;..\platforms\win32;..\stackcore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_UA_STACK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ProgramDataBaseFileName>$(SolutionDir)\$(ProjectName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4001</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="opcua_base64.c" />
+    <ClCompile Include="opcua_buffer.c" />
+    <ClCompile Include="opcua_core.c" />
+    <ClCompile Include="opcua_datetime.c" />
+    <ClCompile Include="opcua_guid.c" />
+    <ClCompile Include="opcua_list.c" />
+    <ClCompile Include="opcua_memory.c" />
+    <ClCompile Include="opcua_memorystream.c" />
+    <ClCompile Include="opcua_proxystub.c" />
+    <ClCompile Include="opcua_string.c" />
+    <ClCompile Include="opcua_thread.c" />
+    <ClCompile Include="opcua_threadpool.c" />
+    <ClCompile Include="opcua_timer.c" />
+    <ClCompile Include="opcua_trace.c" />
+    <ClCompile Include="opcua_utilities.c" />
+    <ClCompile Include="opcua_xmlreader.c" />
+    <ClCompile Include="opcua_xmlwriter.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opcua.h" />
+    <ClInclude Include="opcua_base64.h" />
+    <ClInclude Include="opcua_buffer.h" />
+    <ClInclude Include="opcua_config.h" />
+    <ClInclude Include="opcua_core.h" />
+    <ClInclude Include="opcua_cryptofactory.h" />
+    <ClInclude Include="opcua_datetime.h" />
+    <ClInclude Include="opcua_errorhandling.h" />
+    <ClInclude Include="opcua_exclusions.h" />
+    <ClInclude Include="opcua_guid.h" />
+    <ClInclude Include="opcua_list.h" />
+    <ClInclude Include="opcua_memory.h" />
+    <ClInclude Include="opcua_memorystream.h" />
+    <ClInclude Include="opcua_mutex.h" />
+    <ClInclude Include="opcua_pkifactory.h" />
+    <ClInclude Include="..\platforms\win32\opcua_platformdefs.h" />
+    <ClInclude Include="opcua_proxystub.h" />
+    <ClInclude Include="opcua_semaphore.h" />
+    <ClInclude Include="opcua_socket.h" />
+    <ClInclude Include="opcua_stackstatuscodes.h" />
+    <ClInclude Include="opcua_statuscodes.h" />
+    <ClInclude Include="opcua_string.h" />
+    <ClInclude Include="opcua_thread.h" />
+    <ClInclude Include="opcua_threadpool.h" />
+    <ClInclude Include="opcua_timer.h" />
+    <ClInclude Include="opcua_trace.h" />
+    <ClInclude Include="opcua_utilities.h" />
+    <ClInclude Include="opcua_xmldefs.h" />
+    <ClInclude Include="opcua_xmlreader.h" />
+    <ClInclude Include="opcua_xmlwriter.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

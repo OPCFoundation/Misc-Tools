@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="opcua_base64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_buffer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_core.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_datetime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_guid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_memorystream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_proxystub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_thread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_threadpool.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_timer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_trace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_utilities.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_xmlreader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_xmlwriter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="opcua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_cryptofactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_datetime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_errorhandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_exclusions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_memorystream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_pkifactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platforms\win32\opcua_platformdefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_proxystub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_semaphore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_socket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_stackstatuscodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_statuscodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_threadpool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_trace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_xmldefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_xmlreader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opcua_xmlwriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
