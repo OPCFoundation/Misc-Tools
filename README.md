@@ -4,6 +4,8 @@ Miscellaneous utilities
 ## Certificate Generator ##
 A tool to create OPC UA compliance certificates built with the OpenSSL library.
 
+A pre-built binary can be downloaded from the OPC Foundation [website]( https://opcfoundation.org/developer-tools/developer-kits-unified-architecture/-net-stack-and-sample-applications/).
+
 It is a command line utility with the following arguments:
 
 -command or -cmd <issue | revoke | unrevoke | convert | replace | request | process> The action to perform (default = issue).
@@ -48,7 +50,7 @@ All output files are written to output as hexadecimal strings if -inlineOutput t
 
 |Example|Arguments|
 |-------|---------|
-|Create a self-signed: -cmd issue -sp . -an MyApp -au urn:MyHostMyCompany:MyApp -o MyCompany -dn MyHost -pw MyCertFilePassword
+|Create a self-signed:|-cmd issue -sp . -an MyApp -au urn:MyHostMyCompany:MyApp -o MyCompany -dn MyHost -pw MyCertFilePassword
 |Create a CA Certificate:|-cmd issue -sp . -sn CN=MyCA/O=Acme -ca true
 |Issue an Application Certificate:|-cmd issue -sp . -an MyApp -ikf CaKeyFile -ikp CaPassword
 |Renew a Certificate:|-cmd issue -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword
