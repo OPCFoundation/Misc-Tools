@@ -43,11 +43,12 @@ It is a command line utility with the following arguments:
 |-inlineOutput or -io <filepath>|Write all output as a hexadecimal string instead of saving to a file.
 
 All input file arguments can be a valid directory path or a hexadecimal string.
+
 All output files are written to output as hexadecimal strings if -inlineOutput true is specified.
 
 |Example|Arguments|
 |-------|---------|
-|Create a self-signed Application Certificate: -cmd issue -sp . -an MyApp -au urn:MyHostMyCompany:MyApp -o MyCompany -dn MyHost -pw |MyCertFilePassword
+|Create a self-signed: -cmd issue -sp . -an MyApp -au urn:MyHostMyCompany:MyApp -o MyCompany -dn MyHost -pw MyCertFilePassword
 |Create a CA Certificate:|-cmd issue -sp . -sn CN=MyCA/O=Acme -ca true
 |Issue an Application Certificate:|-cmd issue -sp . -an MyApp -ikf CaKeyFile -ikp CaPassword
 |Renew a Certificate:|-cmd issue -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword
