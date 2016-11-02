@@ -1,6 +1,14 @@
 # Misc-Tools #
 Miscellaneous utilities
 
+## Aggregate Tester ##
+A tool to create the HA aggregate examples appearing in Part 13.
+
+It is a Windows Form application.
+Select File | Load to load the default dataset.
+
+This tool depends on a copy of the UA .NET Stack. If the UA .NET Stack part is changed a new mantis issue needs to be created so the main codebase can be updated too.
+
 ## Certificate Generator ##
 A tool to create OPC UA compliance certificates built with the OpenSSL library.
 
