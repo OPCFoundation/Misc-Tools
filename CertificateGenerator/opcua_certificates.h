@@ -93,6 +93,7 @@ OPCUA_EXPORT OpcUa_StatusCode OpcUa_Certificate_Revoke(
     OpcUa_ByteString* a_pCertificate,
     OpcUa_ByteString* a_pIssuerPrivateKey,
     OpcUa_StringA     a_sIssuerPassword,
+	OpcUa_UInt16      a_uHashSizeInBits,
     OpcUa_Boolean     a_bUnrevoke,
     OpcUa_StringA*    a_pCrlFilePath);
 

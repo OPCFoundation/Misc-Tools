@@ -426,6 +426,11 @@ bool CommandLineArgs::ValidArgs(std::map<std::string, std::string>& arguments)
 	if (!(arg = IsArgSpecified(arguments, "-hashSize", "-hs")).empty())
 	{
 		this->HashSize = atoi(arg.c_str());
+
+		if (this->HashSize == 0)
+		{
+			this->HashSize = 256;
+		}
 	}
 
 	if (!(arg = IsArgSpecified(arguments, "-pem", "-pem")).empty())
@@ -519,7 +524,7 @@ void CommandLineArgs::WriteUsage()
 		fputs("Create a CA Certificate: -cmd issue -sp . -sn CN=MyCA/O=Acme -ca true\r\n", pFile);
 		fputs("Issue an Application Certificate: -cmd issue -sp . -an MyApp -ikf CaKeyFile -ikp CaPassword\r\n", pFile);
 		fputs("Renew a Certificate: -cmd issue -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword\r\n", pFile);
-		fputs("Revoke a Certificate: -cmd revoke -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword\r\n", pFile);
+		fputs("Revoke a Certificate: -cmd revoke -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword -hs 256\r\n", pFile);
 		fputs("Unrevoke a Certificate: -cmd unrevoke -sp . -pbf MyCertFile -ikf CaKeyFile -ikp CaPassword\r\n", pFile);
 		fputs("Convert key format: -cmd convert -pvf MyKeyFile -pvp oldpassword -pem true -pw newpassword\r\n", pFile);
 		fputs("Create a certificate request: -cmd request -pbf MyCertFile.der -pvf MyCertFile.pfx -pvp MyCertFilePassword -rfp MyRequest.csr\r\n", pFile);

@@ -3874,6 +3874,23 @@ OpcUa_FinishErrorHandling;
 }
 #endif
 
+static const EVP_MD* GetDigestAlgorithm(OpcUa_UInt16 a_uHashSizeInBits)
+{
+	const EVP_MD* pDigest = 0;
+
+	switch (a_uHashSizeInBits)
+	{
+	case 160: { pDigest = EVP_sha1();   break; }
+
+	case 0:
+	case 256: { pDigest = EVP_sha256(); break; }
+
+	case 512: { pDigest = EVP_sha512(); break; }
+	}
+
+	return pDigest;
+}
+
 /*============================================================================
  * OpcUa_Certificate_CreateCRL
  *===========================================================================*/
@@ -3881,6 +3898,7 @@ static OpcUa_StatusCode OpcUa_Certificate_CreateCRL(
     OpcUa_StringA	    a_sStorePath,
     X509*               a_pIssuer,
     EVP_PKEY*           a_pIssuerKey,
+	OpcUa_UInt16        a_uHashSizeInBits,
     X509*               a_pCertificate,
     OpcUa_Boolean       a_bUnrevoke,
     OpcUa_StringA       a_sCrlFilePath)
@@ -3897,6 +3915,7 @@ static OpcUa_StatusCode OpcUa_Certificate_CreateCRL(
     int iResult = 0;
     OpcUa_Char* wszFilePath = 0;
     FILE* fp = OpcUa_Null;
+	const EVP_MD* pDigest = OpcUa_Null;
 
 OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
 
@@ -3911,21 +3930,40 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
     OpcUa_GotoErrorIfAllocFailed(pNewCrl);
 
     /* set the version */
-    if (!X509_CRL_set_version(pNewCrl, 2))
+    if (!X509_CRL_set_version(pNewCrl, 1))
     {
-        OpcUa_GotoErrorWithStatus(OpcUa_Bad);
+		OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not set version of CRL.\n");
+		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
     }
 
     /* set the issuer of the CRL */
     if (!X509_CRL_set_issuer_name(pNewCrl, X509_get_subject_name(a_pIssuer)))
     {
-        OpcUa_GotoErrorWithStatus(OpcUa_Bad);
+		OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not set issuer name in CRL.\n");
+		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
     }
 
+	/* add extensions */
+	X509_EXTENSION* pKeyId = OpcUa_Null;
+
+	X509V3_CTX context;
+	X509V3_set_ctx(&context, a_pIssuer, OpcUa_Null, OpcUa_Null, pNewCrl, 0);
+
+	pKeyId = X509V3_EXT_conf_nid(NULL, &context, NID_authority_key_identifier, "keyid, issuer:always");
+
+	if (pKeyId == 0)
+	{
+		OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not create authority key id extension for CRL.\n");
+		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+	}
+
+	X509_CRL_add_ext(pNewCrl, pKeyId, -1);
+	X509_EXTENSION_free(pKeyId);
+
+	/* set the time indicated when the CRL was generated */
     pTime = ASN1_TIME_new();
     OpcUa_GotoErrorIfAllocFailed(pTime);
 
-    /* set the time indicated when the CRL was generated */
     X509_gmtime_adj(pTime,0);
     X509_CRL_set_lastUpdate(pNewCrl, pTime);
 
@@ -3991,11 +4029,16 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
     /* sort by serial number */
     X509_CRL_sort(pNewCrl);
 
-    /* sign the list */
-    pHashType = EVP_get_digestbyname(SN_sha1);
-    OpcUa_GotoErrorIfAllocFailed(pHashType);
+	/* sign the digest with the private key */
+	pDigest = GetDigestAlgorithm(a_uHashSizeInBits);
 
-    if (!X509_CRL_sign(pNewCrl, a_pIssuerKey, pHashType))
+	if (pDigest == NULL)
+	{
+		OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not get digest algorithm.\n");
+		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+	}
+
+    if (!X509_CRL_sign(pNewCrl, a_pIssuerKey, pDigest))
     {
         OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not create signature on new CRL.\n");
         OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
@@ -4007,6 +4050,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
 
     if (_wfopen_s(&fp, (wchar_t*)wszFilePath, L"wb") != 0)
     {
+		OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "Could not write CIRL to disk.\n");
         OpcUa_GotoErrorWithStatus(OpcUa_BadUserAccessDenied);
     }
 
@@ -4075,6 +4119,7 @@ OpcUa_StatusCode OpcUa_Certificate_Revoke(
     OpcUa_ByteString* a_pCertificate,
     OpcUa_ByteString* a_pIssuerPrivateKey,
     OpcUa_StringA     a_sIssuerPassword,
+	OpcUa_UInt16      a_uHashSizeInBits,
     OpcUa_Boolean     a_bUnrevoke,
     OpcUa_StringA*    a_pCrlFilePath)
 {
@@ -4168,7 +4213,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Revoke");
     OpcUa_StrnCatA(sCrlFilePath, MAX_PATH, "].crl", MAX_PATH);
 
     OpcUa_Free(sThumbprint);
-    sThumbprint = 0;
+    sThumbprint = 0; 
 
     OpcUa_Free(sCommonName);
     sCommonName = 0;
@@ -4178,6 +4223,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Revoke");
         a_sStorePath,
         pIssuer,
         pIssuerKey,
+		a_uHashSizeInBits,
         pCertificate,
         a_bUnrevoke,
         sCrlFilePath);
@@ -4747,23 +4793,6 @@ static OpcUa_StatusCode CreateDistiguishedName(
 	}
 
 	return OpcUa_Good;
-}
-
-static const EVP_MD* GetDigestAlgorithm(OpcUa_UInt16 a_uHashSizeInBits)
-{
-	const EVP_MD* pDigest = 0;
-
-	switch (a_uHashSizeInBits)
-	{
-		case 160: { pDigest = EVP_sha1();   break; }
-		
-		case 0:
-		case 256: { pDigest = EVP_sha256(); break; }
-		
-		case 512: { pDigest = EVP_sha512(); break; }
-	}
-
-	return pDigest;
 }
 
 static EVP_PKEY* GetPrivateKey(OpcUa_Key* a_pPrivateKey)

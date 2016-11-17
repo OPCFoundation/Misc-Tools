@@ -761,6 +761,7 @@ void Application::Revoke(CommandLineArgs& args)
 			&certificate,
 			&issuerPrivateKey,
 			(OpcUa_StringA)args.IssuerKeyPassword.c_str(),
+			args.HashSize,
 			args.Command == "unrevoke",
             &sCrlFilePath);
 
