@@ -14,6 +14,8 @@ A tool to create OPC UA compliance certificates built with the OpenSSL library.
 
 A pre-built binary can be downloaded from the OPC Foundation [website]( https://opcfoundation.org/developer-tools/developer-kits-unified-architecture/-net-stack-and-sample-applications/).
 
+The solution requires VS2015 to build but produce an EXE that can be used without any additional dependencies on Windows XP or later systems.
+
 It is a command line utility with the following arguments:
 
 -command or -cmd <issue | revoke | unrevoke | convert | replace | request | process> The action to perform (default = issue).
