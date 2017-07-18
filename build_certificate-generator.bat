@@ -23,7 +23,7 @@ IF NOT EXIST %INSTALLDIR%\third-party\openssl MKDIR %INSTALLDIR%\third-party\ope
 ECHO STEP 2) Fetch from Source Control
 cd %SRCDIR%
 "%GIT%" checkout master
-"%GIT%" reset -hard
+"%GIT%" reset --hard
 "%GIT%" submodule update --init --recursive
 "%GIT%" pull
 
