@@ -123,6 +123,7 @@ copy /y "$(TargetPath)" "$(SolutionDir)Bin\"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BuildVersion.h" />
     <ClInclude Include="CommandLineArgs.h" />
     <ClInclude Include="opcua.h" />
     <ClInclude Include="opcua_certificates.h" />
