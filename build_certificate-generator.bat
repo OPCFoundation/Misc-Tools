@@ -36,6 +36,7 @@ CALL build_openssl.bat
 
 ECHO STEP 4) Building CertificateGenerator
 cd %SRCDIR%
+IF %BUILD_NUMBER% GTR 0 ECHO #define BUILD_NUMBER %BUILD_NUMBER% > CertificateGenerator\BuildVersion.h
 msbuild "CertificateGenerator Solution.sln" /p:Configuration=Release 
 
 ECHO STEP 5) Sign the Binaries
