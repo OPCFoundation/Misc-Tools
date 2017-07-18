@@ -7,27 +7,39 @@ SETLOCAL
 
 set SRCDIR=%~dp0
 set INSTALLDIR=%~dp0
+set GIT=C:\Program Files (x86)\Git\bin\git.exe
+set SIGNTOOL=C:\Build\sign_output.bat
 
 IF "%1"=="no-clean" GOTO noClean
-ECHO STEP 1) Deleting old projects.
+ECHO STEP 1) Deleting Output Directories
 IF EXIST %INSTALLDIR%\bin rmdir /s /q %INSTALLDIR%\bin
-IF EXIST .\build rmdir /s /q .\build
+IF EXIST %INSTALLDIR%\build rmdir /s /q %INSTALLDIR%\build
+IF EXIST %INSTALLDIR%\third-party\openssl rmdir /s /q %INSTALLDIR%\third-party\openssl
+
+IF NOT EXIST %INSTALLDIR%\bin MKDIR %INSTALLDIR%\bin
+IF NOT EXIST %INSTALLDIR%\build MKDIR %INSTALLDIR%\build
+IF NOT EXIST %INSTALLDIR%\third-party\openssl MKDIR %INSTALLDIR%\third-party\openssl
+
+ECHO STEP 2) Fetch from Source Control
+cd %SRCDIR%
+"%GIT%" checkout master
+"%GIT%" reset -hard
+"%GIT%" submodule update --init --recursive
+"%GIT%" pull
+
+PAUSE
+
+ECHO STEP 3) Building OpenSSL
+cd %SRCDIR%\third-party
+CALL build_openssl.bat
 :noClean
 
-IF NOT EXIST .\build MKDIR .\build
-
-ECHO STEP 1) Running CMAKE...
-set OPENSSL_ROOT_DIR=%INSTALLDIR%..\..\third-party\openssl
-cd .\build
-%CMAKEEXE% .. -DCMAKE_INSTALL_PREFIX=%INSTALLDIR%
-
-ECHO STEP 2) Building project...
+ECHO STEP 4) Building CertificateGenerator
+cd %SRCDIR%
 msbuild "CertificateGenerator Solution.sln" /p:Configuration=Release 
 
-ECHO STEP 3) Install Binaries...
-
-ECHO STEP 4) Sign the Binaries
-IF EXIST C:\Build\sign_output.bat C:\Build\sign_output %INSTALLDIR%\bin\*.exe /sha1
+ECHO STEP 5) Sign the Binaries
+IF EXIST "%SIGNTOOL%" "%SIGNTOOL%" %INSTALLDIR%\bin\*.exe /sha1
 
 ECHO *** ALL DONE ***
 GOTO theEnd
