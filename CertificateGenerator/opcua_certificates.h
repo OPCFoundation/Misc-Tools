@@ -140,6 +140,23 @@ OPCUA_EXPORT OpcUa_StatusCode OpcUa_Certificate_Replace(
 	OpcUa_ByteString*  a_pPrivateKeyFilePath);
 
 /**
+* @brief Change the password on private key.
+
+* @param pIssuerPrivateKey [in]     The PKCS#12 or PEM encoded issuer private key file.
+* @param sInputPassword    [in]     The password in the input private key.
+* @param sOutputPassword   [in]     The password for the output private key.
+* @param pNewPrivateKey    [out]    The full path to the file containing the key.
+*
+* @return Status code; @see opcua_statuscodes.h
+*/
+OPCUA_EXPORT OpcUa_StatusCode OpcUa_Certificate_ChangePassword(
+	OpcUa_ByteString*  a_pPrivateKey,
+	OpcUa_StringA      a_sInputPassword,
+	OpcUa_P_FileFormat a_eInputFormat,
+	OpcUa_StringA      a_sOutputPassword,
+	OpcUa_ByteString*  a_pNewPrivateKey);
+
+/**
  * @brief Gets the thumbprint for a certificate.
  *
  * @param pCertificate  [in]  The X509 certificate encoded as a DER blob.

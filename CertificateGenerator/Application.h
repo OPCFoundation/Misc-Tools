@@ -64,6 +64,9 @@ public:
 	// Process a certificate signing request.
 	void ProcessRequest(CommandLineArgs& args);
 
+	// Change a password.
+	void ChangePassword(CommandLineArgs& args);
+
 private:
 
     // Logs a message.

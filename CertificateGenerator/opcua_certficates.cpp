@@ -1425,11 +1425,22 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
 
     if (!a_bIsCA)
     {
-        pExtensions[2].key = SN_basic_constraints;
-        pExtensions[2].value = "critical, CA:TRUE, pathlen:0";
+		if (a_pIssuerCertificate != NULL && a_pIssuerCertificate->Length > 0)
+		{
+			pExtensions[2].key = SN_basic_constraints;
+			pExtensions[2].value = "critical, CA:TRUE, pathlen:0";
 
-        pExtensions[3].key = SN_key_usage;
-        pExtensions[3].value = "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign";
+			pExtensions[3].key = SN_key_usage;
+			pExtensions[3].value = "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign";
+		}
+		else
+		{
+			pExtensions[2].key = SN_basic_constraints;
+			pExtensions[2].value = "critical, CA:FALSE, pathlen:0";
+
+			pExtensions[3].key = SN_key_usage;
+			pExtensions[3].value = "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment";
+		}
 
         pExtensions[4].key = SN_ext_key_usage;
         pExtensions[4].value = "critical, serverAuth, clientAuth";
@@ -2104,7 +2115,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_SavePrivateKeyInS
 
             if (a_sPassword != NULL && strlen(a_sPassword) > 0)
             {
-                pCipher = EVP_des_ede3_cbc();
+                pCipher = EVP_aes_256_cbc();
                 pPassword = a_sPassword;
             }
 
@@ -4406,7 +4417,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Convert");
 
 			if (a_sOutputPassword != NULL && strlen(a_sOutputPassword) > 0)
 			{
-				pCipher = EVP_des_ede3_cbc();
+				pCipher = EVP_aes_256_cbc();
 				pPassword = a_sOutputPassword;
 			}
 

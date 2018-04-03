@@ -954,3 +954,114 @@ void Application::Replace(CommandLineArgs& args)
 		throw;
 	}
 }
+
+void Application::ChangePassword(CommandLineArgs& args)
+{
+	OpcUa_StatusCode uStatus = OpcUa_Good;
+	OpcUa_ByteString certificate;
+	OpcUa_ByteString privateKey;
+	OpcUa_ByteString newPublicKey;
+	OpcUa_ByteString newPrivateKey;
+	OpcUa_StringA sCommonName = 0;
+	OpcUa_StringA sThumbprint = 0;
+
+	try
+	{
+		OpcUa_ByteString_Initialize(&certificate);
+		OpcUa_ByteString_Initialize(&privateKey);
+		OpcUa_ByteString_Initialize(&newPublicKey);
+		OpcUa_ByteString_Initialize(&newPrivateKey);
+
+		ParseHexString(args.PublicKeyFilePath, certificate);
+		ParseHexString(args.PrivateKeyFilePath, privateKey);
+
+		bool inputIsPEM = args.InputIsPEM;
+
+		if (_strnicmp(args.PrivateKeyFilePath.c_str() + args.PrivateKeyFilePath.size() - 4, ".pem", 4) == 0)
+		{
+			inputIsPEM = true;
+		}
+
+		// revoke the certificate.
+		uStatus = OpcUa_Certificate_Convert(
+			&certificate,
+			&privateKey,
+			(OpcUa_StringA)args.PrivateKeyPassword.c_str(),
+			(inputIsPEM) ? OpcUa_Crypto_Encoding_PEM : OpcUa_Crypto_Encoding_PKCS12,
+			(OpcUa_StringA)args.Password.c_str(),
+			(args.OutputIsPEM) ? OpcUa_Crypto_Encoding_PEM : OpcUa_Crypto_Encoding_PKCS12,
+			&newPublicKey,
+			&newPrivateKey);
+
+		// return the new file path.
+		ThrowIfBad(uStatus, "The conversion failed.");
+
+		if (args.StorePath.empty())
+		{
+			std::string output;
+
+			if (!FormatHexString(newPublicKey, output))
+			{
+				ThrowIfBad(uStatus, "Could not format certificate as a hexstring.");
+			}
+
+			args.OutputParameters["-publicKeyFilePath"] = output;
+
+			if (!FormatHexString(newPrivateKey, output))
+			{
+				ThrowIfBad(uStatus, "Could not format private key as a hexstring.");
+			}
+
+			args.OutputParameters["-privateKeyFilePath"] = output;
+		}
+		else
+		{
+			uStatus = OpcUa_Certificate_GetInfo(&certificate, NULL, NULL, &sCommonName, &sThumbprint, NULL, NULL, NULL);
+			ThrowIfBad(uStatus, "Could not get the certificate info.");
+
+			std::string path;
+
+			path = args.StorePath;
+			path += "\\certs\\";
+			path += sCommonName;
+			path += " [";
+			path += sThumbprint;
+			path += "].der";
+
+			uStatus = OpcUa_WriteFile(path.c_str(), newPublicKey.Data, newPublicKey.Length);
+			ThrowIfBad(uStatus, "Could not write the certificate file.");
+
+			path = args.StorePath;
+			path += "\\private\\";
+			path += sCommonName;
+			path += " [";
+			path += sThumbprint;
+			path += "]";
+
+			if (args.OutputIsPEM)
+			{
+				path += ".pem";
+			}
+			else
+			{
+				path += ".pfx";
+			}
+
+			uStatus = OpcUa_WriteFile(path.c_str(), newPrivateKey.Data, newPrivateKey.Length);
+			ThrowIfBad(uStatus, "Could not write the certificate file.");
+		}
+
+		OpcUa_ByteString_Clear(&newPublicKey);
+		OpcUa_ByteString_Clear(&newPrivateKey);
+		OpcUa_Free(sCommonName);
+		OpcUa_Free(sThumbprint);
+	}
+	catch (StatusCodeException e)
+	{
+		OpcUa_ByteString_Clear(&newPublicKey);
+		OpcUa_ByteString_Clear(&newPrivateKey);
+		OpcUa_Free(sCommonName);
+		OpcUa_Free(sThumbprint);
+		throw;
+	}
+}

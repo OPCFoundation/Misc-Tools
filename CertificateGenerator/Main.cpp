@@ -103,6 +103,14 @@ int wmain(int argc, wchar_t* argv[])
 			return 0;
 		}
 
+		// change certificate password
+		if (args.Command == "password")
+		{
+			application.Convert(args);
+			args.WriteOutput();
+			return 0;
+		}
+
 		// convert a replace
 		if (args.Command == "replace")
 		{

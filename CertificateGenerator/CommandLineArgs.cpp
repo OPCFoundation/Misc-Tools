@@ -482,7 +482,7 @@ void CommandLineArgs::WriteUsage()
 			bUsingStdout = false;
 		}
 
-		fputs("-command or -cmd <issue | revoke | unrevoke | convert | replace | request | process> The action to perform (default = issue).\r\n", pFile);
+		fputs("-command or -cmd <issue | revoke | unrevoke | convert | replace | request | process | password> The action to perform (default = issue).\r\n", pFile);
 		fputs("\r\n", pFile);
 		fputs("    issue: create a new certificate.\r\n", pFile);
 		fputs("    revoke: revoke a certificate.\r\n", pFile);
@@ -491,6 +491,7 @@ void CommandLineArgs::WriteUsage()
 		fputs("    replace: update the certificates in a PFX file.\r\n", pFile);
 		fputs("    request: create a new certificate signing request.\r\n", pFile);
 		fputs("    process: create a new certificate from a new certificate signing request.\r\n", pFile);
+		fputs("    password: change the password on a private key.\r\n", pFile);
 		fputs("\r\n", pFile);
 		fputs("-storePath or -sp <filepath>                The directory of the certificate store (must be writeable).\r\n", pFile);
 		fputs("-applicationName or -an <name>              The name of the application.\r\n", pFile);
@@ -529,6 +530,7 @@ void CommandLineArgs::WriteUsage()
 		fputs("Convert key format: -cmd convert -pvf MyKeyFile -pvp oldpassword -pem true -pw newpassword\r\n", pFile);
 		fputs("Create a certificate request: -cmd request -pbf MyCertFile.der -pvf MyCertFile.pfx -pvp MyCertFilePassword -rfp MyRequest.csr\r\n", pFile);
 		fputs("Process a certificate request: -cmd process -rfp MyRequest.csr -ikf CaKeyFile -ikp CaPassword -pbf MyCertFile.der\r\n", pFile);
+		fputs("Change a password: -cmd password -pvf MyCertFile.pfx -pvp MyCertFilePassword -password NewPassword\r\n", pFile);
 		
 		fclose(pFile);
 		pFile = 0;
