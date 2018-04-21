@@ -1425,7 +1425,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
 
     if (!a_bIsCA)
     {
-		if (a_pIssuerCertificate != NULL && a_pIssuerCertificate->Length > 0)
+		if (a_pIssuerCertificate == NULL || a_pIssuerCertificate->Length == 0)
 		{
 			pExtensions[2].key = SN_basic_constraints;
 			pExtensions[2].value = "critical, CA:TRUE, pathlen:0";
