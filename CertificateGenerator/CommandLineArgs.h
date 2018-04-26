@@ -65,7 +65,8 @@ public:
 	
 	CommandLineArgs()
 	{
-		KeySize = 1024;
+		KeyType = 0;
+		KeySize = 2048;
 		StartTime = 0;
 		HashSize = 256;
 		LifetimeInMonths = 12;
@@ -97,6 +98,7 @@ public:
 	std::string PrivateKeyFilePath;
 	std::string PrivateKeyPassword;
 	std::string RequestFilePath;
+	unsigned short KeyType;
 	unsigned short KeySize;
 	__int64 StartTime;
 	unsigned short HashSize;

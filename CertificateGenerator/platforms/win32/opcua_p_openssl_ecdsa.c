@@ -115,7 +115,6 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_GenerateKeys(
     }
 
 OpcUa_ReturnStatusCode;
-
 OpcUa_BeginErrorHandling;
 OpcUa_FinishErrorHandling;
 }

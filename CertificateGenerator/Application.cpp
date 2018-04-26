@@ -675,7 +675,7 @@ void Application::Issue(CommandLineArgs& args)
 			(OpcUa_StringA)args.SubjectName.c_str(),
             uNoOfDomainNames,
             pDomainNames,
-            0,
+			args.KeyType,
 			args.KeySize,
 			args.StartTime,
 			args.LifetimeInMonths,

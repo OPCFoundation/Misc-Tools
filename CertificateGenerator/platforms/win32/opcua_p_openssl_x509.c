@@ -512,9 +512,16 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
     case OpcUa_Crypto_Rsa_Alg_Id:
     case OpcUa_Crypto_Rsa_OAEP_Id:
         pSubjectPublicKey = d2i_PublicKey(EVP_PKEY_RSA,OpcUa_Null,((const unsigned char**)&(a_pSubjectPublicKey.Key.Data)),a_pSubjectPublicKey.Key.Length);
+		OpcUa_GotoErrorIfNull(pSubjectPublicKey, OpcUa_BadInvalidArgument);
         break;
     case OpcUa_Crypto_Ecc_Alg_Id:
-        pSubjectPublicKey = d2i_PublicKey(EVP_PKEY_EC,OpcUa_Null,((const unsigned char**)&(a_pSubjectPublicKey.Key.Data)),a_pSubjectPublicKey.Key.Length);
+	case OpcUa_Crypto_KeyType_Ecc_Public:
+	case OpcUa_Crypto_Ec_nistP256:
+	case OpcUa_Crypto_Ec_nistP384:
+	case OpcUa_Crypto_Ec_brainpoolP256r1:
+	case OpcUa_Crypto_Ec_brainpoolP384r1:
+        pSubjectPublicKey = d2i_PUBKEY(OpcUa_Null,((const unsigned char**)&(a_pSubjectPublicKey.Key.Data)),a_pSubjectPublicKey.Key.Length);
+		OpcUa_GotoErrorIfNull(pSubjectPublicKey, OpcUa_BadInvalidArgument);
         break;
     default:
         return OpcUa_BadInvalidArgument;
@@ -525,9 +532,12 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
     case OpcUa_Crypto_Rsa_Alg_Id:
     case OpcUa_Crypto_Rsa_OAEP_Id:
         pIssuerPrivateKey = d2i_PrivateKey(EVP_PKEY_RSA,OpcUa_Null,((const unsigned char**)&(a_pIssuerPrivateKey.Key.Data)),a_pIssuerPrivateKey.Key.Length);
+		OpcUa_GotoErrorIfNull(pIssuerPrivateKey, OpcUa_BadInvalidArgument);
         break;
     case OpcUa_Crypto_Ecc_Alg_Id:
+	case OpcUa_Crypto_KeyType_Ecc_Private:
         pIssuerPrivateKey = d2i_PrivateKey(EVP_PKEY_EC,OpcUa_Null,((const unsigned char**)&(a_pIssuerPrivateKey.Key.Data)),a_pIssuerPrivateKey.Key.Length);
+		OpcUa_GotoErrorIfNull(pIssuerPrivateKey, OpcUa_BadInvalidArgument);
         break;
     default:
         return OpcUa_BadInvalidArgument;

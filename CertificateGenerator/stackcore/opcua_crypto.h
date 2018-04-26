@@ -44,7 +44,10 @@ typedef OpcUa_Void* OpcUa_ProviderHandle;
 #define OpcUa_Crypto_Rsa_Id                         19
 
 #define OpcUa_Crypto_Ec_Name                        L"EC"
-#define OpcUa_Crypto_Ec_Id                          20
+#define OpcUa_Crypto_Ec_nistP256                    20
+#define OpcUa_Crypto_Ec_nistP384                    21
+#define OpcUa_Crypto_Ec_brainpoolP256r1             22
+#define OpcUa_Crypto_Ec_brainpoolP384r1             23
 
 /* @brief Key Types; If Handle, Data points to an opaque key handle and Length must be interpreted as boolean. */
 #define OpcUa_Crypto_KeyType_Invalid                0

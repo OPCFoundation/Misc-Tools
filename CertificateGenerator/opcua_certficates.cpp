@@ -52,6 +52,15 @@ static char OID_SUBJECT_ALT_NAME[] = { 85, 29, 7 };
 OpcUa_Guid* OpcUa_P_Guid_Create(OpcUa_Guid* Guid);
 
 /*============================================================================
+* OpcUa_P_OpenSSL_ECDSA_GenerateKeys
+*===========================================================================*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_GenerateKeys(
+	OpcUa_CryptoProvider*   a_pProvider,
+	OpcUa_UInt32            a_keyType,
+	OpcUa_Key*              a_pPublicKey,
+	OpcUa_Key*              a_pPrivateKey);
+
+/*============================================================================
 * Calculate DateTime Difference In Seconds (Rounded)
 *===========================================================================*/
 OpcUa_StatusCode OpcUa_P_GetDateTimeDiffInSeconds32(
@@ -1195,6 +1204,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
     {
         case OPCUA_P_SHA_224:
         case OPCUA_P_SHA_256:
+		case OPCUA_P_SHA_384:
         {
             break;
         }
@@ -1363,7 +1373,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
             tPublicKey.Type  = OpcUa_Crypto_Rsa_Alg_Id;
         }
     }
-    else
+    else if (a_uKeyType == OpcUa_Crypto_Rsa_Id)
     {
         // determine size of public key.
         uStatus = OpcUa_Crypto_GenerateAsymmetricKeypair(
@@ -1403,6 +1413,17 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
 
         OpcUa_GotoErrorIfBad(uStatus);
     }
+	else
+	{
+		// generate a new key pair.
+		uStatus = OpcUa_P_OpenSSL_ECDSA_GenerateKeys(
+			&tCryptoProvider,
+			a_uKeyType,
+			&tPublicKey,
+			a_pPrivateKey);
+
+		OpcUa_GotoErrorIfBad(uStatus);
+	}
 
     // create the subject name fields.
     pSubjectNameFields = (OpcUa_Crypto_NameEntry*)OpcUa_Alloc(fieldNames.size()*sizeof(OpcUa_Crypto_NameEntry));
@@ -2252,36 +2273,66 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_SavePrivateKeyInS
     OpcUa_ReturnErrorIfArgumentNull(a_pPrivateKey);
 
     // check for supported key type.
-    if (a_pPrivateKey->Type != OpcUa_Crypto_Rsa_Alg_Id && a_pPrivateKey->Type != OpcUa_Crypto_KeyType_Rsa_Private)
+    if (a_pPrivateKey->Type == OpcUa_Crypto_Rsa_Alg_Id || a_pPrivateKey->Type == OpcUa_Crypto_KeyType_Rsa_Private)
     {
-        return OpcUa_BadInvalidArgument;
+		const unsigned char* pPos = a_pPrivateKey->Key.Data;
+		pRsaPrivateKey = d2i_RSAPrivateKey(NULL, &pPos, a_pPrivateKey->Key.Length);
+		OpcUa_GotoErrorIfAllocFailed(pRsaPrivateKey);
+
+		pEvpKey = EVP_PKEY_new();
+
+		// convert to intermediary openssl struct
+		if (!EVP_PKEY_set1_RSA(pEvpKey, pRsaPrivateKey))
+		{
+			OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+		}
+
+		uStatus = OpcUa_Certificate_SavePrivateKeyInStore2(
+			a_sStorePath,
+			a_eFileFormat,
+			a_sPassword,
+			a_pCertificate,
+			pEvpKey,
+			a_pFilePath);
+
+		OpcUa_GotoErrorIfBad(uStatus);
+
+		RSA_free(pRsaPrivateKey);
+		EVP_PKEY_free(pEvpKey);
     }
 
-    // convert DER encoded data to RSA data.
-    const unsigned char* pPos = a_pPrivateKey->Key.Data;
-    pRsaPrivateKey = d2i_RSAPrivateKey(NULL, &pPos, a_pPrivateKey->Key.Length);
-    OpcUa_GotoErrorIfAllocFailed(pRsaPrivateKey);
+	// check for supported key type.
+	else if ( a_pPrivateKey->Type == OpcUa_Crypto_KeyType_Ecc_Private)
+	{
+		const unsigned char* pPos = a_pPrivateKey->Key.Data;
+		auto pEcPrivateKey = d2i_ECPrivateKey(NULL, &pPos, a_pPrivateKey->Key.Length);
+		OpcUa_GotoErrorIfAllocFailed(pEcPrivateKey);
 
-    pEvpKey = EVP_PKEY_new();
+		pEvpKey = EVP_PKEY_new();
 
-    // convert to intermediary openssl struct
-    if (!EVP_PKEY_set1_RSA(pEvpKey, pRsaPrivateKey))
-    {
-        OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
-    }
+		// convert to intermediary openssl struct
+		if (!EVP_PKEY_set1_EC_KEY(pEvpKey, pEcPrivateKey))
+		{
+			OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+		}
 
-    uStatus = OpcUa_Certificate_SavePrivateKeyInStore2(
-        a_sStorePath,
-        a_eFileFormat,
-        a_sPassword,
-        a_pCertificate,
-        pEvpKey,
-        a_pFilePath);
+		uStatus = OpcUa_Certificate_SavePrivateKeyInStore2(
+			a_sStorePath,
+			a_eFileFormat,
+			a_sPassword,
+			a_pCertificate,
+			pEvpKey,
+			a_pFilePath);
 
-    OpcUa_GotoErrorIfBad(uStatus);
+		OpcUa_GotoErrorIfBad(uStatus);
 
-    RSA_free(pRsaPrivateKey);
-    EVP_PKEY_free(pEvpKey);
+		EC_KEY_free(pEcPrivateKey);
+		EVP_PKEY_free(pEvpKey);
+	}
+	else
+	{
+		OpcUa_GotoErrorWithStatus(OpcUa_BadNotSupported);
+	}
 
 OpcUa_ReturnStatusCode;
 OpcUa_BeginErrorHandling;
@@ -4827,6 +4878,132 @@ static EVP_PKEY* GetPrivateKey(OpcUa_Key* a_pPrivateKey)
 	}
 
 	return pPrivateKey;
+}
+
+static OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_GenerateKeys(
+	OpcUa_CryptoProvider*   a_pProvider,
+	OpcUa_UInt32            a_keyType,
+	OpcUa_Key*              a_pPublicKey,
+	OpcUa_Key*              a_pPrivateKey)
+{
+	EC_KEY* pEcKey = nullptr;
+	EC_GROUP* pEcGroup = nullptr;
+	EVP_PKEY* pEvpKey = nullptr;
+	OpcUa_Byte* pBuffer = nullptr;
+	OpcUa_UInt32 uBits = 0;
+
+OpcUa_InitializeStatus(1, "OpcUa_P_OpenSSL_ECDSA_GenerateKeys");
+
+	OpcUa_ReturnErrorIfArgumentNull(a_pProvider);
+	OpcUa_ReturnErrorIfArgumentNull(a_pPublicKey);
+	OpcUa_ReturnErrorIfArgumentNull(a_pPrivateKey);
+
+	OpcUa_ReferenceParameter(a_pProvider);
+
+	switch (a_keyType)
+	{
+		case OpcUa_Crypto_Ec_nistP256:
+		{
+			pEcKey = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
+			pEcGroup = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
+			break;
+		}
+
+		case OpcUa_Crypto_Ec_brainpoolP256r1:
+		{
+			pEcKey = EC_KEY_new_by_curve_name(NID_brainpoolP256r1);
+			pEcGroup = EC_GROUP_new_by_curve_name(NID_brainpoolP256r1);
+			break;
+		}
+
+		case OpcUa_Crypto_Ec_nistP384:
+		{
+			pEcKey = EC_KEY_new_by_curve_name(NID_secp384r1);
+			pEcGroup = EC_GROUP_new_by_curve_name(NID_secp384r1);
+			break;
+		}
+
+		case OpcUa_Crypto_Ec_brainpoolP384r1:
+		{
+			pEcKey = EC_KEY_new_by_curve_name(NID_brainpoolP384r1);
+			pEcGroup = EC_GROUP_new_by_curve_name(NID_brainpoolP384r1);
+			break;
+		}
+	}
+
+	EC_GROUP_set_asn1_flag(pEcGroup, OPENSSL_EC_NAMED_CURVE);
+	EC_GROUP_set_point_conversion_form(pEcGroup, POINT_CONVERSION_UNCOMPRESSED);
+
+	EC_KEY_generate_key(pEcKey);
+	EC_KEY_set_group(pEcKey, pEcGroup);
+
+	pEvpKey = EVP_PKEY_new();
+	EVP_PKEY_set1_EC_KEY(pEvpKey, pEcKey);
+
+	/* i2d_PublicKey does not work properly */
+	/* publicKey.key.Length = i2d_PublicKey(pEvpKey, &pBuffer); */
+
+	pBuffer = OpcUa_Null;
+	a_pPublicKey->Key.Length = i2d_PUBKEY(pEvpKey, &pBuffer);
+
+	a_pPublicKey->Key.Data = (OpcUa_Byte*)OpcUa_Alloc(a_pPublicKey->Key.Length);
+	OpcUa_GotoErrorIfAllocFailed(a_pPublicKey->Key.Data);
+	OpcUa_MemCpy(a_pPublicKey->Key.Data, a_pPublicKey->Key.Length, pBuffer, a_pPublicKey->Key.Length);
+
+	OPENSSL_free(pBuffer);
+	pBuffer = OpcUa_Null;
+	
+	a_pPrivateKey->Key.Length = i2d_PrivateKey(pEvpKey, &pBuffer);
+	
+	a_pPrivateKey->Key.Data = (OpcUa_Byte*)OpcUa_Alloc(a_pPrivateKey->Key.Length);
+	OpcUa_GotoErrorIfAllocFailed(a_pPrivateKey->Key.Data);
+	OpcUa_MemCpy(a_pPrivateKey->Key.Data, a_pPrivateKey->Key.Length, pBuffer, a_pPrivateKey->Key.Length);
+
+	OPENSSL_free(pBuffer);
+	pBuffer = OpcUa_Null;
+	
+	a_pPublicKey->Type = OpcUa_Crypto_KeyType_Ecc_Public;
+	a_pPrivateKey->Type = OpcUa_Crypto_KeyType_Ecc_Private;
+
+	if (pEvpKey != OpcUa_Null)
+	{
+		EVP_PKEY_free(pEvpKey);
+	}
+
+	if (pEcKey != OpcUa_Null)
+	{
+		EC_KEY_free(pEcKey);
+	}
+
+	if (pEcGroup != OpcUa_Null)
+	{
+		EC_GROUP_free(pEcGroup);
+	}
+
+OpcUa_ReturnStatusCode;
+OpcUa_BeginErrorHandling;
+
+	if (pBuffer != OpcUa_Null)
+	{
+		OPENSSL_free(pBuffer);
+	}
+
+	if (pEvpKey != OpcUa_Null)
+	{
+		EVP_PKEY_free(pEvpKey);
+	}
+
+	if (pEcKey != OpcUa_Null)
+	{
+		EC_KEY_free(pEcKey);
+	}
+
+	if (pEcGroup != OpcUa_Null)
+	{
+		EC_GROUP_free(pEcGroup);
+	}
+
+OpcUa_FinishErrorHandling;
 }
 
 static OpcUa_StatusCode GetCertificate(X509* pX509, OpcUa_ByteString* a_pCertificate)

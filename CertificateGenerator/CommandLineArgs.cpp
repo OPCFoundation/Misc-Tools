@@ -374,6 +374,36 @@ bool CommandLineArgs::ValidArgs(std::map<std::string, std::string>& arguments)
 		this->IssuerKeyPassword = arg;
 	}
 
+	if (!(arg = IsArgSpecified(arguments, "-keyType", "-kt")).empty())
+	{
+		if (arg == "rsa")
+		{
+			this->KeyType = 0;
+		}
+		else if (arg == "nistP256")
+		{
+			this->KeyType = OpcUa_Crypto_Ec_nistP256;
+		}
+		else if (arg == "nistP384")
+		{
+			this->KeyType = OpcUa_Crypto_Ec_nistP384;
+		}
+		else if (arg == "brainpoolP256r1")
+		{
+			this->KeyType = OpcUa_Crypto_Ec_brainpoolP256r1;
+		}
+		else if (arg == "brainpoolP384r1")
+		{
+			this->KeyType = OpcUa_Crypto_Ec_brainpoolP384r1;
+		}
+		else
+		{
+			OutputParameters["-error"] = "Unsupported keytype.";
+			OutputParameters["-keyType"] = arg.c_str();
+			return false;
+		}
+	}
+
 	if (!(arg = IsArgSpecified(arguments, "-keySize", "-ks")).empty())
 	{
 		this->KeySize = atoi(arg.c_str());
@@ -503,6 +533,7 @@ void CommandLineArgs::WriteUsage()
 		fputs("-issuerCertificate or -icf <filepath>       The path to the issuer certificate file.\r\n", pFile);
 		fputs("-issuerKeyFilePath or -ikf <filepath>       The path to the issuer private key file.\r\n", pFile);
 		fputs("-issuerKeyPassword or -ikp <password>       The password for the issuer private key file.\r\n", pFile);
+		fputs("-keyType or -kt <keytype>                   One of rsa, nistP256, nistP384, brainpoolP256r1 or brainpoolP384r1 (default = rsa).\r\n", pFile);
 		fputs("-keySize or -ks <bits>                      The size of key as a multiple of 1024 (default = 1024).\r\n", pFile);
 		fputs("-hashSize or -hs <bits>                     The size of hash <160 | 256 | 512> (default = 256).\r\n", pFile);
 		fputs("-startTime or -st <nanoseconds>             The start time for the validity period (nanoseconds from 1600-01-01).\r\n", pFile);

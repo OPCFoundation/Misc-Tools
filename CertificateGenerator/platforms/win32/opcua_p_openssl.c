@@ -1226,15 +1226,6 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_GenerateAsymmetricKeyPair(
                                                     a_pPublicKey,
                                                     a_pPrivateKey);
     }
-#ifndef OPENSSL_NO_ECDSA
-    else if(a_type == OpcUa_Crypto_Ec_Id)
-    {
-        uStatus = OpcUa_P_OpenSSL_ECDSA_GenerateKeys(   a_pProvider,
-                                                        a_bits,
-                                                        a_pPublicKey,
-                                                        a_pPrivateKey);
-    }
-#endif
     else
     {
         uStatus = OpcUa_BadInvalidArgument;
