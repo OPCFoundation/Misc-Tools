@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,339,1
- PRODUCTVERSION 1,1,339,0
+ FILEVERSION 1,1,339,2
+ PRODUCTVERSION 1,1,339,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,13 +69,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "OPC Foundation"
             VALUE "FileDescription", "A tool to generate UA application instance certificates."
-            VALUE "FileVersion", "1.1.339.1"
+            VALUE "FileVersion", "1.1.339.2"
             VALUE "InternalName", " Opc.Ua.CertificateGenerator.exe"
             VALUE "LegalCopyright", "Copyright (c) 2004-2018 OPC Foundation, Inc"
             VALUE "LegalTrademarks", "This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/)"
             VALUE "OriginalFilename", "Opc.Ua.CertificateGenerator.exe"
             VALUE "ProductName", "UA Certificate Generator"
-            VALUE "ProductVersion", "1.1.339.0"
+            VALUE "ProductVersion", "1.1.339.2"
         END
     END
     BLOCK "VarFileInfo"

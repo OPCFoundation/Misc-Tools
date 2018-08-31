@@ -1457,10 +1457,10 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
 		else
 		{
 			pExtensions[2].key = SN_basic_constraints;
-			pExtensions[2].value = "critical, CA:FALSE, pathlen:0";
+			pExtensions[2].value = "critical, CA:TRUE, pathlen:0";
 
 			pExtensions[3].key = SN_key_usage;
-			pExtensions[3].value = "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment";
+			pExtensions[3].value = "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign";
 		}
 
         pExtensions[4].key = SN_ext_key_usage;
