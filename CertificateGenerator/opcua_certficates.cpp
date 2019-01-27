@@ -5665,11 +5665,6 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateFromCSR");
 	X509V3_CTX context;
 	X509V3_set_ctx(&context, pIssuerX509, pNewX509, pRequest, OpcUa_Null, 0);
 
-	if (!AddExtension(&context, pExtensions, NID_authority_key_identifier, "keyid, issuer:always"))
-	{
-		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
-	}
-
 	for (int ii = 0; ii < sk_X509_EXTENSION_num(pExtensions); ii++)
 	{
 		X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pExtensions, ii);
@@ -5678,6 +5673,26 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateFromCSR");
 		{
 			OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
 		}
+	}
+
+	if (!AddExtension(&context, pExtensions, NID_authority_key_identifier, "keyid, issuer:always"))
+	{
+		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+	}
+
+	if (!AddExtension(&context, pExtensions, NID_basic_constraints, "critical, CA:FALSE"))
+	{
+		return OpcUa_Null;
+	}
+
+	if (!AddExtension(&context, pExtensions, NID_key_usage, "critical, nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign"))
+	{
+		return OpcUa_Null;
+	}
+
+	if (!AddExtension(&context, pExtensions, NID_ext_key_usage, "critical, serverAuth, clientAuth"))
+	{
+		return OpcUa_Null;
 	}
 
 	/* sign certificate with the CA private key */
