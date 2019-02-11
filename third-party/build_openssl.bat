@@ -17,22 +17,20 @@ IF "%1"=="no-clean" GOTO noClean
 IF EXIST %INSTALLDIR%\openssl rmdir /s /q %INSTALLDIR%\openssl
 
 ECHO STEP 1) Configure OpenSSL for VC-WIN32...
-%PERLEXE% .\Configure VC-WIN32 no-asm --prefix=%INSTALLDIR%\openssl
+%PERLEXE% .\Configure VC-WIN32 no-asm no-shared enable-capieng --prefix=%INSTALLDIR%\openssl
 
 ECHO STEP 2) Creating Makefiles...
-CALL .\ms\do_ms.bat
+nmake clean
 
-nmake -f .\ms\nt.mak clean
-nmake -f .\ms\nt.mak vclean
 :noClean
 
 IF NOT EXIST %INSTALLDIR%\openssl MKDIR %INSTALLDIR%\openssl
 
 ECHO STEP 3) Building OpenSSL
-nmake -f .\ms\nt.mak
+nmake
 
 ECHO STEP 4) Install OpenSSL...
-nmake -f .\ms\nt.mak install
+nmake install
 
 ECHO *** ALL DONE ***
 GOTO theEnd

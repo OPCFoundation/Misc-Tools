@@ -116,6 +116,12 @@
     <ClCompile Include="opcua_p_wincrypt_random.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="opcua_p_openssl_ed25519.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opcua_p_openssl_ed448.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="opcua_p_binary.h">

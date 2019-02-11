@@ -42,6 +42,7 @@
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
 #include <openssl/conf.h>
+#include "opcua_p_openssl.h"
 
 static char OID_AUTHORITY_KEY_IDENTIFIER[] = { 85, 29, 1 };
 static char OID_SUBJECT_ALT_NAME[] = { 85, 29, 7 };
@@ -1413,7 +1414,47 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
 
         OpcUa_GotoErrorIfBad(uStatus);
     }
-	else
+  else if (a_uKeyType == OpcUa_Crypto_Ec_curve25519)
+  {
+      tPublicKey.Key.Length = a_pPrivateKey->Key.Length = 256;
+
+      // allocate public key buffer.
+      tPublicKey.Key.Data = (OpcUa_Byte*)OpcUa_Alloc(tPublicKey.Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(tPublicKey.Key.Data);
+
+      // allocate private key buffer.
+      a_pPrivateKey->Key.Data = (OpcUa_Byte*)OpcUa_Alloc(a_pPrivateKey->Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(a_pPrivateKey->Key.Data);
+
+      // generate a new key pair.
+      uStatus = OpcUa_P_OpenSSL_Ed25519_GenerateKeys(
+        &tCryptoProvider,
+        &tPublicKey,
+        a_pPrivateKey);
+
+      OpcUa_GotoErrorIfBad(uStatus);
+    }
+  else if (a_uKeyType == OpcUa_Crypto_Ec_curve448)
+    {
+      tPublicKey.Key.Length = a_pPrivateKey->Key.Length = 448;
+
+      // allocate public key buffer.
+      tPublicKey.Key.Data = (OpcUa_Byte*)OpcUa_Alloc(tPublicKey.Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(tPublicKey.Key.Data);
+
+      // allocate private key buffer.
+      a_pPrivateKey->Key.Data = (OpcUa_Byte*)OpcUa_Alloc(a_pPrivateKey->Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(a_pPrivateKey->Key.Data);
+
+      // generate a new key pair.
+      uStatus = OpcUa_P_OpenSSL_Ed448_GenerateKeys(
+        &tCryptoProvider,
+        &tPublicKey,
+        a_pPrivateKey);
+
+      OpcUa_GotoErrorIfBad(uStatus);
+    }
+  else
 	{
 		// generate a new key pair.
 		uStatus = OpcUa_P_OpenSSL_ECDSA_GenerateKeys(
@@ -1811,23 +1852,24 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_GetThumbprint");
     if (a_psApplicationUri != NULL || a_psDomains != NULL)
     {
         // find the subject alt name extension.
-        STACK_OF(X509_EXTENSION)* pExtensions = pCertificate->cert_info->extensions;
+        const STACK_OF(X509_EXTENSION)* pExtensions = X509_get0_extensions(pCertificate);
 
         for (int ii = 0; ii < sk_X509_EXTENSION_num(pExtensions); ii++)
         {
             X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pExtensions, ii);
 
             // get the internal id for the extension.
-            int nid = OBJ_obj2nid(pExtension->object);
+            int nid = OBJ_obj2nid(X509_EXTENSION_get_object(pExtension));
 
             if (nid == 0)
             {
                 // check for obsolete name.
-                ASN1_OBJECT* oid = (ASN1_OBJECT*)pExtension->object;
+                ASN1_OBJECT* oid = X509_EXTENSION_get_object(pExtension);
 
-                if (memcmp(oid->data, ::OID_SUBJECT_ALT_NAME, 3) == 0)
+                if (memcmp(OBJ_get0_data(oid), ::OID_SUBJECT_ALT_NAME, 3) == 0)
                 {
-                    oid->nid = nid = NID_subject_alt_name;
+                    //TODO (LP)
+                    //oid->nid = nid = NID_subject_alt_name;
                 }
             }
 
@@ -2329,7 +2371,45 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_SavePrivateKeyInS
 		EC_KEY_free(pEcPrivateKey);
 		EVP_PKEY_free(pEvpKey);
 	}
-	else
+
+    // check for supported key type.
+  else if (a_pPrivateKey->Type == OpcUa_Crypto_KeyType_Ed25519_Private)
+    {
+      const unsigned char* pPos = a_pPrivateKey->Key.Data;
+      auto pPrivateKey = d2i_PrivateKey(EVP_PKEY_ED25519, NULL, &pPos, a_pPrivateKey->Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(pPrivateKey);
+
+      uStatus = OpcUa_Certificate_SavePrivateKeyInStore2(
+        a_sStorePath,
+        a_eFileFormat,
+        a_sPassword,
+        a_pCertificate,
+        pPrivateKey,
+        a_pFilePath);
+
+      OpcUa_GotoErrorIfBad(uStatus);
+
+      EVP_PKEY_free(pPrivateKey);
+    }
+  else if (a_pPrivateKey->Type == OpcUa_Crypto_KeyType_Ed448_Private)
+    {
+      const unsigned char* pPos = a_pPrivateKey->Key.Data;
+      auto pPrivateKey = d2i_PrivateKey(EVP_PKEY_ED448, NULL, &pPos, a_pPrivateKey->Key.Length);
+      OpcUa_GotoErrorIfAllocFailed(pPrivateKey);
+
+      uStatus = OpcUa_Certificate_SavePrivateKeyInStore2(
+        a_sStorePath,
+        a_eFileFormat,
+        a_sPassword,
+        a_pCertificate,
+        pPrivateKey,
+        a_pFilePath);
+
+      OpcUa_GotoErrorIfBad(uStatus);
+
+      EVP_PKEY_free(pPrivateKey);
+    }
+  else
 	{
 		OpcUa_GotoErrorWithStatus(OpcUa_BadNotSupported);
 	}
@@ -4036,27 +4116,27 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
         OpcUa_GotoErrorIfBad(uStatus);
 
         /* merge the CRLs into a single list */
-        for (ii = 0; ii < sk_X509_REVOKED_num(pExistingCrl->crl->revoked); ii++)
+        for (ii = 0; ii < sk_X509_REVOKED_num(X509_CRL_get_REVOKED(pExistingCrl)); ii++)
         {
-            X509_REVOKED* pRevoked = sk_X509_REVOKED_value(pExistingCrl->crl->revoked, ii);
+            X509_REVOKED* pRevoked = sk_X509_REVOKED_value(X509_CRL_get_REVOKED(pExistingCrl), ii);
 
             if (a_bUnrevoke)
             {
                 pSerialNumber = X509_get_serialNumber(a_pCertificate);
 
-                if (ASN1_INTEGER_cmp(pSerialNumber, pRevoked->serialNumber) == 0)
+                if (ASN1_INTEGER_cmp(pSerialNumber, X509_REVOKED_get0_serialNumber(pRevoked)) == 0)
                 {
                     continue;
                 }
             }
 
-            if (!X509_CRL_get0_by_serial(pNewCrl, &pExistingEntry, pRevoked->serialNumber))
+            if (!X509_CRL_get0_by_serial(pNewCrl, &pExistingEntry, (ASN1_INTEGER*)X509_REVOKED_get0_serialNumber(pRevoked)))
             {
                 pEntry = X509_REVOKED_new();
                 OpcUa_GotoErrorIfAllocFailed(pEntry);
 
-                X509_REVOKED_set_serialNumber(pEntry, pRevoked->serialNumber);
-                X509_REVOKED_set_revocationDate(pEntry, pRevoked->revocationDate);
+                X509_REVOKED_set_serialNumber(pEntry, (ASN1_INTEGER*)X509_REVOKED_get0_serialNumber(pRevoked));
+                X509_REVOKED_set_revocationDate(pEntry, (ASN1_INTEGER*)X509_REVOKED_get0_revocationDate(pRevoked));
 
                 X509_CRL_add0_revoked(pNewCrl, pEntry);
                 pEntry = OpcUa_Null;

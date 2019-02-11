@@ -150,7 +150,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_Private_Sign(
     pPrivateKey = d2i_PrivateKey(EVP_PKEY_EC,OpcUa_Null,((const unsigned char**)&(a_privateKey->Key.Data)),a_privateKey->Key.Length);
     OpcUa_ReturnErrorIfArgumentNull(pPrivateKey);
 
-    ret = ECDSA_sign((int)0, (const unsigned char*)a_data.Data,(int)a_data.Length, (unsigned char*)a_pSignature->Data, (unsigned int*)&(a_pSignature->Length), (EC_KEY*)pPrivateKey->pkey.ec);
+    ret = ECDSA_sign((int)0, (const unsigned char*)a_data.Data,(int)a_data.Length, (unsigned char*)a_pSignature->Data, (unsigned int*)&(a_pSignature->Length), EVP_PKEY_get0_EC_KEY(pPrivateKey));
 
     if(ret < 0)
         uStatus = OpcUa_Bad;
@@ -198,7 +198,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_Public_Verify(
     pPublicKey = d2i_PUBKEY(OpcUa_Null, ((const unsigned char**)&(a_publicKey->Key.Data)), a_publicKey->Key.Length);
     OpcUa_ReturnErrorIfArgumentNull(pPublicKey);
 
-    result = ECDSA_verify(0,a_data.Data,a_data.Length,a_signature.Data, a_signature.Length, pPublicKey->pkey.ec);
+    result = ECDSA_verify(0,a_data.Data,a_data.Length,a_signature.Data, a_signature.Length, EVP_PKEY_get0_EC_KEY(pPublicKey));
 
     if(result == -1)
         uStatus = OpcUa_Bad;

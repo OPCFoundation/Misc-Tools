@@ -64,6 +64,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4001</DisableSpecificWarnings>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)opcua_win32.lib</OutputFile>
@@ -103,6 +104,8 @@
     <ClCompile Include="opcua_p_openssl_3des.c" />
     <ClCompile Include="opcua_p_openssl_aes.c" />
     <ClCompile Include="opcua_p_openssl_ecdsa.c" />
+    <ClCompile Include="opcua_p_openssl_ed25519.c" />
+    <ClCompile Include="opcua_p_openssl_ed448.c" />
     <ClCompile Include="opcua_p_openssl_hmac_sha.c" />
     <ClCompile Include="opcua_p_openssl_pki.c" />
     <ClCompile Include="opcua_p_openssl_random.c" />
