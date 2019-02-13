@@ -20,7 +20,7 @@ The command to clone is:
 cd src
 git clone https://github.com/openssl/openssl.git
 cd openssl
-git checkout tags/OpenSSL_1_0_2j
+git checkout tags/OpenSSL_1_1_1a
 ```
 
 As new versions are published the tag reference in the command above should be adjusted accordingly.
