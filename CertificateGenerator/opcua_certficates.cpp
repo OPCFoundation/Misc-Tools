@@ -1442,7 +1442,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_Create");
     pExtensions[0].value = "hash";
 
     pExtensions[1].key = SN_authority_key_identifier;
-    pExtensions[1].value = "keyid, issuer:always";
+    pExtensions[1].value = "keyid";
 
     if (!a_bIsCA)
     {
@@ -4011,7 +4011,7 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateCRL");
 	X509V3_CTX context;
 	X509V3_set_ctx(&context, a_pIssuer, OpcUa_Null, OpcUa_Null, pNewCrl, 0);
 
-	pKeyId = X509V3_EXT_conf_nid(NULL, &context, NID_authority_key_identifier, "keyid, issuer:always");
+	pKeyId = X509V3_EXT_conf_nid(NULL, &context, NID_authority_key_identifier, "keyid");
 
 	if (pKeyId == 0)
 	{
@@ -5201,7 +5201,7 @@ static STACK_OF(X509_EXTENSION)* CreateExtensions(
 
 	if (!bIsRequest)
 	{
-		if (!AddExtension(pContext, pExtensions, NID_authority_key_identifier, "keyid, issuer:always"))
+		if (!AddExtension(pContext, pExtensions, NID_authority_key_identifier, "keyid"))
 		{
 			return OpcUa_Null;
 		}
@@ -5660,22 +5660,12 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateFromCSR");
 	}
 
 	/* add extensions */
-	STACK_OF(X509_EXTENSION)* pExtensions = X509_REQ_get_extensions(pRequest);
+	STACK_OF(X509_EXTENSION)* pExtensions = sk_X509_EXTENSION_new_null();
 
 	X509V3_CTX context;
-	X509V3_set_ctx(&context, pIssuerX509, pNewX509, pRequest, OpcUa_Null, 0);
+	X509V3_set_ctx(&context, pIssuerX509, pNewX509, OpcUa_Null, OpcUa_Null, 0);
 
-	for (int ii = 0; ii < sk_X509_EXTENSION_num(pExtensions); ii++)
-	{
-		X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pExtensions, ii);
-		
-		if (!X509_add_ext(pNewX509, pExtension, -1))
-		{
-			OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
-		}
-	}
-
-	if (!AddExtension(&context, pExtensions, NID_authority_key_identifier, "keyid, issuer:always"))
+	if (!AddExtension(&context, pExtensions, NID_authority_key_identifier, "keyid"))
 	{
 		OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
 	}
@@ -5693,6 +5683,56 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateFromCSR");
 	if (!AddExtension(&context, pExtensions, NID_ext_key_usage, "critical, serverAuth, clientAuth"))
 	{
 		return OpcUa_Null;
+	}
+
+	STACK_OF(X509_EXTENSION)* pRequestExtensions = X509_REQ_get_extensions(pRequest);
+
+	for (int ii = 0; ii < sk_X509_EXTENSION_num(pRequestExtensions); ii++)
+	{
+		X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pRequestExtensions, ii);
+
+		// get the internal id for the extension.
+		int nid = OBJ_obj2nid(pExtension->object);
+
+		if (nid == 0)
+		{
+			// check for obsolete name.
+			ASN1_OBJECT* oid = (ASN1_OBJECT*)pExtension->object;
+
+			if (memcmp(oid->data, ::OID_SUBJECT_ALT_NAME, 3) == 0)
+			{
+				oid->nid = nid = NID_subject_alt_name;
+			}
+		}
+
+		// filter out extensions which are set by the CA.
+		switch (nid)
+		{
+			case NID_authority_key_identifier:
+			case NID_basic_constraints:
+			case NID_key_usage:
+			case NID_ext_key_usage:
+			{
+				break;
+			}
+
+			default:
+			{
+				sk_X509_EXTENSION_push(pExtensions, pExtension);
+				break;
+			}
+		}
+	}
+
+	// add new extensions to certificate.
+	for (int ii = 0; ii < sk_X509_EXTENSION_num(pExtensions); ii++)
+	{
+		X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pExtensions, ii);
+
+		if (!X509_add_ext(pNewX509, pExtension, -1))
+		{
+			OpcUa_GotoErrorWithStatus(OpcUa_BadEncodingError);
+		}
 	}
 
 	/* sign certificate with the CA private key */
