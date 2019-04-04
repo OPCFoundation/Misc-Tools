@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Opc.Ua;
+using System.Globalization;
 
 namespace Quickstarts
 {
@@ -438,7 +439,7 @@ namespace Quickstarts
 
             try
             {
-                return new Opc.Ua.Variant(Convert.ToDouble(value), TypeInfo.Scalars.Double);
+                return new Opc.Ua.Variant(Convert.ToDouble(value, CultureInfo.InvariantCulture), TypeInfo.Scalars.Double);
             }
             catch
             {
