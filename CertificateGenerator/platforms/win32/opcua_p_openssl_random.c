@@ -102,11 +102,11 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_SeedPRNG(OpcUa_Int bytes)
 
     OpcUa_ReferenceParameter(bytes);
 
-    RAND_screen();
+	RAND_poll();
 
     if(RAND_status () == 0)
     {
-        OpcUa_Trace(OPCUA_TRACE_LEVEL_WARNING, "P_OpenSSL - SeedPRNG: WARNING! PRNG has to been seeded!\n");
+        OpcUa_Trace(OPCUA_TRACE_LEVEL_WARNING, "P_OpenSSL - SeedPRNG: WARNING! PRNG has to be seeded!\n");
     }
 
 OpcUa_ReturnStatusCode;

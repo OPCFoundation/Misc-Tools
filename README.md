@@ -10,11 +10,11 @@ Select File | Load to load the default dataset.
 This tool depends on a copy of the UA .NET Stack. If the UA .NET Stack part is changed a new mantis issue needs to be created so the main codebase can be updated too.
 
 ## Certificate Generator ##
-A tool to create OPC UA compliance certificates built with the latest OpenSSL 1.02 library.
+A tool to create OPC UA compliance certificates built with the latest OpenSSL 1.1.1 library.
 
 OpenSSL can be found here: https://github.com/openssl/openssl
 
-Building OpenSSL 1.0.2 requires Perl which can be found here: http://strawberryperl.com/
+Building OpenSSL 1.1.1 requires Perl which can be found here: http://strawberryperl.com/
 
 The solution requires VS2015 to build but produce an EXE that can be used without any additional dependencies on Windows XP or later systems.
 

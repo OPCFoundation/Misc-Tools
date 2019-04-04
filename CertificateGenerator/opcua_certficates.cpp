@@ -44,7 +44,6 @@
 #include <openssl/conf.h>
 #include "opcua_p_openssl.h"
 
-static char OID_AUTHORITY_KEY_IDENTIFIER[] = { 85, 29, 1 };
 static char OID_SUBJECT_ALT_NAME[] = { 85, 29, 7 };
 
 /*============================================================================
@@ -5772,16 +5771,16 @@ OpcUa_InitializeStatus(OpcUa_Module_Crypto, "OpcUa_Certificate_CreateFromCSR");
 		X509_EXTENSION* pExtension = sk_X509_EXTENSION_value(pRequestExtensions, ii);
 
 		// get the internal id for the extension.
-		int nid = OBJ_obj2nid(pExtension->object);
+		int nid = OBJ_obj2nid(X509_EXTENSION_get_object(pExtension));
 
 		if (nid == 0)
 		{
 			// check for obsolete name.
-			ASN1_OBJECT* oid = (ASN1_OBJECT*)pExtension->object;
+			ASN1_OBJECT* oid = (ASN1_OBJECT*)X509_EXTENSION_get_object(pExtension);
 
-			if (memcmp(oid->data, ::OID_SUBJECT_ALT_NAME, 3) == 0)
+			if (memcmp(OBJ_get0_data(oid), ::OID_SUBJECT_ALT_NAME, 3) == 0)
 			{
-				oid->nid = nid = NID_subject_alt_name;
+				nid = NID_subject_alt_name;
 			}
 		}
 

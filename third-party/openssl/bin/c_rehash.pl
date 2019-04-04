@@ -13,7 +13,7 @@
 # and add symbolic links to their hash values.
 
 my $dir = "";
-my $prefix = "C:\\Workspace\\FLEX\\ECC\\Prototyping\\CertGen\\third-party\\\\openssl";
+my $prefix = "X:\\Work\\OPC\\Misc-Tools\\third-party\\\\openssl";
 
 my $errorcount = 0;
 my $openssl = $ENV{OPENSSL} || "openssl";
