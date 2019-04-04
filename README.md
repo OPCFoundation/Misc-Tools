@@ -11,6 +11,7 @@ This tool depends on a copy of the UA .NET Stack. If the UA .NET Stack part is c
 
 ## Certificate Generator ##
 A tool to create OPC UA compliance certificates built with the latest OpenSSL 1.1.1 library.
+Pre-built OpenSSL binaries are checked in. Only need to build if needed for debugging.
 
 OpenSSL can be found here: https://github.com/openssl/openssl
 
