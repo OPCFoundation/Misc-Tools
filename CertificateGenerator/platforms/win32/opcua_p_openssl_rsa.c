@@ -268,7 +268,10 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_RSA_Public_GetKeyLength(
     pData = a_publicKey.Key.Data;
     pPublicKey = d2i_PublicKey(EVP_PKEY_RSA, OpcUa_Null, &pData, a_publicKey.Key.Length);
 
-    uKeySize = RSA_size(pPublicKey->pkey.rsa);
+    RSA *rsaKey = EVP_PKEY_get0_RSA(pPublicKey);
+    OpcUa_ReturnErrorIfArgumentNull(rsaKey);
+
+    uKeySize = RSA_size(rsaKey);
 
     *a_pKeyLen = uKeySize*8;
 
@@ -335,9 +338,14 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "RSA_Public_Encrypt");
     pData = a_publicKey->Key.Data;
     pPublicKey = d2i_PublicKey(EVP_PKEY_RSA, OpcUa_Null, &pData, a_publicKey->Key.Length);
 
+    RSA *rsaKey = OpcUa_Null;
+
     if ( pPublicKey != OpcUa_Null )
     {
-        uKeySize = RSA_size(pPublicKey->pkey.rsa);
+      rsaKey = EVP_PKEY_get0_RSA(pPublicKey);
+      OpcUa_ReturnErrorIfArgumentNull(rsaKey);
+      
+      uKeySize = RSA_size(rsaKey);
     }
     else
     {
@@ -391,7 +399,7 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "RSA_Public_Encrypt");
             iEncryptedBytes = RSA_public_encrypt(   uBytesToEncrypt,      /* how much to encrypt  */
                                                     a_pPlainText + uPlainTextPosition,      /* what to encrypt      */
                                                     a_pCipherText + uCipherTextPosition,/* where to encrypt     */
-                                                    pPublicKey->pkey.rsa,                  /* public key           */
+              rsaKey,                  /* public key           */
                                                     a_padding);        /* padding mode         */
             if(iEncryptedBytes < 0)
             {
@@ -486,7 +494,10 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_RSA_Private_Decrypt(
         return OpcUa_BadInvalidArgument;
     }
 
-    keySize = RSA_size(pPrivateKey->pkey.rsa);
+    RSA *rsaKey = EVP_PKEY_get0_RSA(pPrivateKey);
+    OpcUa_ReturnErrorIfArgumentNull(rsaKey);
+
+    keySize = RSA_size(rsaKey);
 
     if((a_cipherTextLen%keySize) != 0)
     {
@@ -525,7 +536,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_RSA_Private_Decrypt(
             decryptedBytes = RSA_private_decrypt(   keySize,                            /* how much to decrypt  */
                                                     a_pCipherText + iCipherText,        /* what to decrypt      */
                                                     a_pPlainText + (*a_pPlainTextLen),  /* where to decrypt     */
-                                                    pPrivateKey->pkey.rsa,              /* private key          */
+              rsaKey,              /* private key          */
                                                     a_padding);                         /* padding mode         */
 
             /* goto error block, if decryption fails */
@@ -606,10 +617,10 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "RSA_Private_Sign");
     /* convert private key and check key length against buffer length */
     pSSLPrivateKey = d2i_PrivateKey(EVP_PKEY_RSA, OpcUa_Null, &pData, a_privateKey->Key.Length);
     OpcUa_GotoErrorIfTrue((pSSLPrivateKey == OpcUa_Null), OpcUa_BadUnexpectedError);
-    OpcUa_GotoErrorIfTrue((a_pSignature->Length < RSA_size(pSSLPrivateKey->pkey.rsa)), OpcUa_BadInvalidArgument);
+    OpcUa_GotoErrorIfTrue((a_pSignature->Length < RSA_size(EVP_PKEY_get0_RSA(pSSLPrivateKey))), OpcUa_BadInvalidArgument);
 
     /* sign data */
-    iErr = RSA_sign(NID_sha1, a_data.Data, a_data.Length, a_pSignature->Data, (unsigned int*)&a_pSignature->Length, pSSLPrivateKey->pkey.rsa);
+    iErr = RSA_sign(NID_sha1, a_data.Data, a_data.Length, a_pSignature->Data, (unsigned int*)&a_pSignature->Length, EVP_PKEY_get0_RSA(pSSLPrivateKey));
     OpcUa_GotoErrorIfTrue((iErr != 1), OpcUa_BadUnexpectedError);
 
     /* free internal key representation */
@@ -679,14 +690,17 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_RSA_Public_Verify(
         OpcUa_GotoErrorWithStatus(OpcUa_BadInvalidArgument);
     }
 
-    keySize = RSA_size(pPublicKey->pkey.rsa);
+    RSA *rsaKey = EVP_PKEY_get0_RSA(pPublicKey);
+    OpcUa_ReturnErrorIfArgumentNull(rsaKey);
+
+    keySize = RSA_size(rsaKey);
 
     if((a_pSignature->Length%keySize) != 0)
     {
         OpcUa_GotoErrorWithStatus(OpcUa_Bad);
     }
 
-    if (RSA_verify(NID_sha1, a_data.Data, a_data.Length, a_pSignature->Data, a_pSignature->Length, pPublicKey->pkey.rsa) != 1)
+    if (RSA_verify(NID_sha1, a_data.Data, a_data.Length, a_pSignature->Data, a_pSignature->Length, rsaKey) != 1)
     {
         OpcUa_GotoErrorWithStatus(OpcUa_Bad);
     }

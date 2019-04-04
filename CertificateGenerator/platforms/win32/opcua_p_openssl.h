@@ -762,6 +762,94 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_ECDSA_Public_Verify(
     OpcUa_Int16           padding,
     OpcUa_ByteString      signature);
 
+/*** Ed25519 ASYMMETRIC SIGNATURE ***/
+
+/**
+  @brief
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed25519_GenerateKeys(
+  OpcUa_CryptoProvider*   pProvider,
+  OpcUa_Key*              pPublicKey,
+  OpcUa_Key*              pPrivaeKey);
+
+/**
+  @brief Signs data using Elliptic Curves Digital Signature Algorithm(Ed25519) with the private key of the appropriate key pair
+  and a Elliptic Curves Signature.
+
+  @param pProvider                  [in]  The crypto provider handle.
+  @param privateKey                 [in]  The private key to sign the data.
+  @param padding                    [in]  The padding scheme used for filling empty bytes after signing. (not used for ECDSA)
+
+  @param pSignature                 [out]  The signature of the data.
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed25519_Private_Sign(
+  OpcUa_CryptoProvider* pProvider,
+  OpcUa_ByteString      data,
+  OpcUa_Key*            privateKey,
+  OpcUa_Int16           padding,
+  OpcUa_ByteString*     pSignature);
+
+/**
+  @brief Verifies signed data using Elliptic Curves Digital Signature Algorithm(Ed25519) with the public key of the appropriate key pair
+  and a Elliptic Curves Signature.
+
+  @param pProvider                  [in]  The crypto provider handle.
+  @param data                       [in]  The data that was signed.
+  @param publicKey                  [in]  The public key to verify the signature.
+  @param padding                    [in]  The padding scheme used for filling empty bytes after signing. (not used for ECDSA)
+  @param signature                  [in]  The signature of data.
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed25519_Public_Verify(
+  OpcUa_CryptoProvider* pProvider,
+  OpcUa_ByteString      data,
+  OpcUa_Key*            publicKey,
+  OpcUa_Int16           padding,
+  OpcUa_ByteString      signature);
+
+/*** Ed448 ASYMMETRIC SIGNATURE ***/
+
+/**
+  @brief
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed448_GenerateKeys(
+  OpcUa_CryptoProvider*   pProvider,
+  OpcUa_Key*              pPublicKey,
+  OpcUa_Key*              pPrivaeKey);
+
+/**
+  @brief Signs data using Elliptic Curves Digital Signature Algorithm(Ed448) with the private key of the appropriate key pair
+  and a Elliptic Curves Signature.
+
+  @param pProvider                  [in]  The crypto provider handle.
+  @param privateKey                 [in]  The private key to sign the data.
+  @param padding                    [in]  The padding scheme used for filling empty bytes after signing. (not used for ECDSA)
+
+  @param pSignature                 [out]  The signature of the data.
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed448_Private_Sign(
+  OpcUa_CryptoProvider* pProvider,
+  OpcUa_ByteString      data,
+  OpcUa_Key*            privateKey,
+  OpcUa_Int16           padding,
+  OpcUa_ByteString*     pSignature);
+
+/**
+  @brief Verifies signed data using Elliptic Curves Digital Signature Algorithm(Ed448) with the public key of the appropriate key pair
+  and a Elliptic Curves Signature.
+
+  @param pProvider                  [in]  The crypto provider handle.
+  @param data                       [in]  The data that was signed.
+  @param publicKey                  [in]  The public key to verify the signature.
+  @param padding                    [in]  The padding scheme used for filling empty bytes after signing. (not used for ECDSA)
+  @param signature                  [in]  The signature of data.
+*/
+OpcUa_StatusCode OpcUa_P_OpenSSL_Ed448_Public_Verify(
+  OpcUa_CryptoProvider* pProvider,
+  OpcUa_ByteString      data,
+  OpcUa_Key*            publicKey,
+  OpcUa_Int16           padding,
+  OpcUa_ByteString      signature);
+
 /**
   @brief Generates a session key using secret input data.
 

@@ -48,6 +48,8 @@ typedef OpcUa_Void* OpcUa_ProviderHandle;
 #define OpcUa_Crypto_Ec_nistP384                    21
 #define OpcUa_Crypto_Ec_brainpoolP256r1             22
 #define OpcUa_Crypto_Ec_brainpoolP384r1             23
+#define OpcUa_Crypto_Ec_curve25519                  24
+#define OpcUa_Crypto_Ec_curve448                    25
 
 /* @brief Key Types; If Handle, Data points to an opaque key handle and Length must be interpreted as boolean. */
 #define OpcUa_Crypto_KeyType_Invalid                0
@@ -60,6 +62,10 @@ typedef OpcUa_Void* OpcUa_ProviderHandle;
 #define OpcUa_Crypto_KeyType_Rsa_Public             6
 #define OpcUa_Crypto_KeyType_Ecc_Public             7
 #define OpcUa_Crypto_KeyType_Ecc_Private            8
+#define OpcUa_Crypto_KeyType_Ed25519_Public         9
+#define OpcUa_Crypto_KeyType_Ed25519_Private        10
+#define OpcUa_Crypto_KeyType_Ed448_Public           11
+#define OpcUa_Crypto_KeyType_Ed448_Private          12
 
 /* keys as handles instead of encodings */
 #define OpcUa_Crypto_KeyType_Handle_Offset          20
@@ -72,6 +78,10 @@ typedef OpcUa_Void* OpcUa_ProviderHandle;
 #define OpcUa_Crypto_KeyType_Rsa_Public_Handle      OpcUa_Crypto_KeyType_Rsa_Public  + OpcUa_Crypto_KeyType_Handle_Offset
 #define OpcUa_Crypto_KeyType_Ecc_Public_Handle      OpcUa_Crypto_KeyType_Ecc_Public  + OpcUa_Crypto_KeyType_Handle_Offset
 #define OpcUa_Crypto_KeyType_Ecc_Private_Handle     OpcUa_Crypto_KeyType_Ecc_Private + OpcUa_Crypto_KeyType_Handle_Offset
+#define OpcUa_Crypto_KeyType_Ed25519_Public_Handle    OpcUa_Crypto_KeyType_Ed25519_Public  + OpcUa_Crypto_KeyType_Handle_Offset
+#define OpcUa_Crypto_KeyType_Ed25519_Private_Handle   OpcUa_Crypto_KeyType_Ed25519_Private + OpcUa_Crypto_KeyType_Handle_Offset
+#define OpcUa_Crypto_KeyType_Ed448_Public_Handle    OpcUa_Crypto_KeyType_Ed448_Public  + OpcUa_Crypto_KeyType_Handle_Offset
+#define OpcUa_Crypto_KeyType_Ed448_Private_Handle   OpcUa_Crypto_KeyType_Ed448_Private + OpcUa_Crypto_KeyType_Handle_Offset
 
 /* @brief decide wether a keytype is a handle or not */
 #define OPCUA_CRYPTO_KEY_ISHANDLE(xKey)             (xKey->Type > (OpcUa_UInt)OpcUa_Crypto_KeyType_Handle_Offset)

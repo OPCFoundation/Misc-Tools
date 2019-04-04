@@ -131,7 +131,7 @@ OpcUa_Int OpcUa_P_OpenSSL_CertificateStore_Verify_Callback(int a_ok, X509_STORE_
 
         if (err == X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT)
         {
-            X509_NAME_oneline(X509_get_issuer_name(a_pStore->current_cert), buf, 256);
+            X509_NAME_oneline(X509_get_issuer_name(X509_STORE_CTX_get_current_cert(a_pStore)), buf, 256);
             OpcUa_Trace(OPCUA_TRACE_LEVEL_ERROR, "\tissuer=%s\n", buf);
         }
     }
@@ -308,13 +308,13 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "CertificateStore_IsExplicitlyTru
         }
 
         /* end of chain if self signed. */
-        if (a_pX509Context->check_issued(a_pX509Context, x, x))
+        if (X509_STORE_CTX_get_check_issued(a_pX509Context)(a_pX509Context, x, x))
         {
             break;
         }
 
         /* look in the store for the issuer. */
-        iResult = a_pX509Context->get_issuer(&xtmp, a_pX509Context, x);
+        iResult = X509_STORE_CTX_get_get_issuer(a_pX509Context)(&xtmp, a_pX509Context, x);
 
         if (iResult == 0)
         {
@@ -826,7 +826,7 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "PKI_ValidateCertificate");
     /* verify the certificate */
     if(((*a_pValidationCode = X509_verify_cert(pContext)) <= 0))
     {
-        switch(pContext->error)
+        switch(X509_STORE_CTX_get_error(pContext))
         {
             case X509_V_ERR_CERT_HAS_EXPIRED:
             case X509_V_ERR_CERT_NOT_YET_VALID:

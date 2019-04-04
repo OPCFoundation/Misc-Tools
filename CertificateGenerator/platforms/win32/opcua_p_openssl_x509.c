@@ -520,7 +520,11 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
 	case OpcUa_Crypto_Ec_nistP384:
 	case OpcUa_Crypto_Ec_brainpoolP256r1:
 	case OpcUa_Crypto_Ec_brainpoolP384r1:
-        pSubjectPublicKey = d2i_PUBKEY(OpcUa_Null,((const unsigned char**)&(a_pSubjectPublicKey.Key.Data)),a_pSubjectPublicKey.Key.Length);
+  case OpcUa_Crypto_Ec_curve25519:
+  case OpcUa_Crypto_KeyType_Ed25519_Public:
+  case OpcUa_Crypto_Ec_curve448:
+  case OpcUa_Crypto_KeyType_Ed448_Public:
+    pSubjectPublicKey = d2i_PUBKEY(OpcUa_Null, ((const unsigned char**)&(a_pSubjectPublicKey.Key.Data)), a_pSubjectPublicKey.Key.Length);
 		OpcUa_GotoErrorIfNull(pSubjectPublicKey, OpcUa_BadInvalidArgument);
         break;
     default:
@@ -539,7 +543,17 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
         pIssuerPrivateKey = d2i_PrivateKey(EVP_PKEY_EC,OpcUa_Null,((const unsigned char**)&(a_pIssuerPrivateKey.Key.Data)),a_pIssuerPrivateKey.Key.Length);
 		OpcUa_GotoErrorIfNull(pIssuerPrivateKey, OpcUa_BadInvalidArgument);
         break;
-    default:
+  case OpcUa_Crypto_Ec_curve25519:
+  case OpcUa_Crypto_KeyType_Ed25519_Private:
+    pIssuerPrivateKey = d2i_PrivateKey(EVP_PKEY_ED25519, OpcUa_Null, ((const unsigned char**)&(a_pIssuerPrivateKey.Key.Data)), a_pIssuerPrivateKey.Key.Length);
+    OpcUa_GotoErrorIfNull(pIssuerPrivateKey, OpcUa_BadInvalidArgument);
+    break;
+  case OpcUa_Crypto_Ec_curve448:
+  case OpcUa_Crypto_KeyType_Ed448_Private:
+    pIssuerPrivateKey = d2i_PrivateKey(EVP_PKEY_ED448, OpcUa_Null, ((const unsigned char**)&(a_pIssuerPrivateKey.Key.Data)), a_pIssuerPrivateKey.Key.Length);
+    OpcUa_GotoErrorIfNull(pIssuerPrivateKey, OpcUa_BadInvalidArgument);
+    break;
+  default:
         return OpcUa_BadInvalidArgument;
     }
 
@@ -688,28 +702,35 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_SelfSigned_Custom_Create(
     }
 
     /* sign certificate with the CA private key */
-    switch(a_signatureHashAlgorithm)
+    if (
+      (OpcUa_Crypto_KeyType_Ed25519_Private != a_pIssuerPrivateKey.Type)
+      &&
+      (OpcUa_Crypto_KeyType_Ed448_Private != a_pIssuerPrivateKey.Type)
+      )
     {
-    case OPCUA_P_SHA_160:
+      switch (a_signatureHashAlgorithm)
+      {
+      case OPCUA_P_SHA_160:
         pDigest = EVP_sha1();
         break;
-    case OPCUA_P_SHA_224:
+      case OPCUA_P_SHA_224:
         pDigest = EVP_sha224();
         break;
-    case OPCUA_P_SHA_256:
+      case OPCUA_P_SHA_256:
         pDigest = EVP_sha256();
         break;
-    case OPCUA_P_SHA_384:
+      case OPCUA_P_SHA_384:
         pDigest = EVP_sha384();
         break;
-    case OPCUA_P_SHA_512:
+      case OPCUA_P_SHA_512:
         pDigest = EVP_sha512();
         break;
-    default:
-        uStatus =  OpcUa_BadNotSupported;
+      default:
+        uStatus = OpcUa_BadNotSupported;
         OpcUa_GotoErrorIfBad(uStatus);
+      }
     }
-
+    
     if(!(X509_sign(*((X509**)a_ppCertificate), pIssuerPrivateKey, pDigest)))
     {
         uStatus =  OpcUa_Bad;
@@ -1009,7 +1030,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_GetPublicKey(
     /* free X509 certificate, since not needed anymore */
     X509_free(pCertificate);
 
-    switch(EVP_PKEY_type(pPublicKey->type))
+    switch(EVP_PKEY_base_id(pPublicKey))
     {
     case EVP_PKEY_RSA:
 
@@ -1154,7 +1175,7 @@ OpcUa_InitializeStatus(OpcUa_Module_P_OpenSSL, "X509_GetPrivateKey");
         pPKCS12Cert = OpcUa_Null;
     }
 
-    switch(EVP_PKEY_type(pPrivateKey->type))
+    switch(EVP_PKEY_base_id(pPrivateKey))
     {
     case EVP_PKEY_RSA:
         {
@@ -1250,7 +1271,15 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_GetSignature(
 
     a_pCertificate->Data -= a_pCertificate->Length;
 
-    a_pSignature->Signature.Length = pX509Certificate->signature->length;
+    ASN1_BIT_STRING *sig = OpcUa_Null;
+    X509_ALGOR *alg = OpcUa_Null;
+
+    X509_get0_signature(&sig, &alg, pX509Certificate);
+
+    OpcUa_ReturnErrorIfArgumentNull(sig);
+    OpcUa_ReturnErrorIfArgumentNull(alg);
+
+    a_pSignature->Signature.Length = sig->length;
 
     if(a_pSignature->Signature.Data == OpcUa_Null)
     {
@@ -1258,9 +1287,9 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_GetSignature(
     }
 
     OpcUa_P_Memory_MemCpy(  a_pSignature->Signature.Data,
-                            pX509Certificate->signature->length,
-                            pX509Certificate->signature->data,
-                            pX509Certificate->signature->length);
+      sig->length,
+      sig->data,
+      sig->length);
 
     if(a_pSignature->Signature.Data == OpcUa_Null)
     {
@@ -1268,7 +1297,7 @@ OpcUa_StatusCode OpcUa_P_OpenSSL_X509_GetSignature(
         OpcUa_GotoErrorIfBad(uStatus);
     }
 
-    a_pSignature->Algorithm = OBJ_obj2nid(pX509Certificate->sig_alg->algorithm);
+    a_pSignature->Algorithm = OBJ_obj2nid(alg->algorithm);
 
     if(a_pSignature->Algorithm == NID_undef)
     {
