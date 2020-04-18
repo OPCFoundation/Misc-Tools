@@ -10,6 +10,9 @@ set INSTALLDIR=%~dp0
 set GIT=C:\Program Files (x86)\Git\bin\git.exe
 set SIGNTOOL=C:\Build\sign_output.bat
 
+set GIT=C:\Program Files\Git\bin\git.exe
+IF NOT EXIST %GIT% set GIT=C:\Program Files (x86)\Git\bin\git.exe
+
 IF "%1"=="no-clean" GOTO noClean
 ECHO STEP 1) Deleting Output Directories
 IF EXIST %INSTALLDIR%\bin rmdir /s /q %INSTALLDIR%\bin
@@ -26,8 +29,6 @@ cd %SRCDIR%
 "%GIT%" reset --hard
 "%GIT%" submodule update --init --recursive
 "%GIT%" pull
-
-PAUSE
 
 ECHO STEP 3) Building OpenSSL
 cd %SRCDIR%\third-party
