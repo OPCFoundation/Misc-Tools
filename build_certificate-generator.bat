@@ -10,7 +10,8 @@ set INSTALLDIR=%~dp0
 set GIT=C:\Program Files (x86)\Git\bin\git.exe
 set SIGNTOOL=C:\Build\sign_output.bat
 
-IF NOT EXIST "%GIT%" SET GIT=C:\Program Files\Git\bin\git.exe
+set GIT=C:\Program Files\Git\bin\git.exe
+IF NOT EXIST %GIT% set GIT=C:\Program Files (x86)\Git\bin\git.exe
 
 IF "%1"=="no-clean" GOTO noClean
 ECHO STEP 1) Deleting Output Directories
