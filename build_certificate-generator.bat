@@ -25,10 +25,10 @@ IF NOT EXIST %INSTALLDIR%\third-party\openssl MKDIR %INSTALLDIR%\third-party\ope
 
 ECHO STEP 2) Fetch from Source Control
 cd %SRCDIR%
-REM "%GIT%" checkout master
-REM "%GIT%" reset --hard
-REM "%GIT%" submodule update --init --recursive
-REM "%GIT%" pull
+"%GIT%" checkout master
+"%GIT%" reset --hard
+"%GIT%" submodule update --init --recursive
+"%GIT%" pull
 
 ECHO STEP 3) Building OpenSSL
 cd %SRCDIR%\third-party
