@@ -12,7 +12,6 @@
 #include <map>
 #include <vector>
 #include <opcua.h>
-
 #include "StatusCodeException.h"
 #include "CommandLineArgs.h"
 #include "Application.h"
@@ -31,6 +30,7 @@ int wmain(int argc, wchar_t* argv[])
 		#if _DEBUG
 		MessageBoxW(0, argv[1], 0, 0);
 		#endif
+
 
         application.Initialize();
 		

@@ -28,6 +28,7 @@
 #include <vector>
 #include <map>
 #include <opcua.h>
+#include <openssl/opensslv.h>
 
 #include "CommandLineArgs.h"
 #include "StatusCodeException.h"
@@ -570,6 +571,10 @@ void CommandLineArgs::WriteUsage()
 		fputs("Create a certificate request: -cmd request -pbf MyCertFile.der -pvf MyCertFile.pfx -pvp MyCertFilePassword -rfp MyRequest.csr\r\n", pFile);
 		fputs("Process a certificate request: -cmd process -rfp MyRequest.csr -ikf CaKeyFile -ikp CaPassword -pbf MyCertFile.der\r\n", pFile);
 		fputs("Change a password: -cmd password -pvf MyCertFile.pfx -pvp MyCertFilePassword -password NewPassword\r\n", pFile);
+		fputs("\r\nUsing ", pFile);
+		fputs(OPENSSL_VERSION_TEXT, pFile);
+		fputs("\r\n", pFile);
+
 		
 		fclose(pFile);
 		pFile = 0;
