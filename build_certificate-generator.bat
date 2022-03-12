@@ -29,8 +29,6 @@ cd %SRCDIR%
 "%GIT%" submodule update --init --recursive
 "%GIT%" pull
 
-IF EXIST "%SRCDIR%\third-party\src\openssl\makefile" GOTO noClean
-
 ECHO STEP 3) Building OpenSSL
 cd %SRCDIR%\third-party
 CALL build_openssl.bat
