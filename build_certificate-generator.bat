@@ -7,7 +7,6 @@ SETLOCAL
 
 set SRCDIR=%~dp0
 set INSTALLDIR=%~dp0
-set GIT=C:\Program Files (x86)\Git\bin\git.exe
 set SIGNTOOL=C:\Build\sign_output.bat
 
 set GIT=C:\Program Files\Git\bin\git.exe
@@ -29,6 +28,8 @@ cd %SRCDIR%
 "%GIT%" reset --hard
 "%GIT%" submodule update --init --recursive
 "%GIT%" pull
+
+IF EXIST "%SRCDIR%\third-party\src\openssl\makefile" GOTO noClean
 
 ECHO STEP 3) Building OpenSSL
 cd %SRCDIR%\third-party
