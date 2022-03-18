@@ -7,6 +7,8 @@ SETLOCAL
 
 set SRCDIR=%~dp0
 set INSTALLDIR=%~dp0
+SET ZIP="C:\Program Files\7-zip\7z.exe"
+set GIT=C:\Program Files (x86)\Git\bin\git.exe
 set SIGNTOOL=C:\Build\sign_output.bat
 
 set GIT=C:\Program Files\Git\bin\git.exe
@@ -42,7 +44,12 @@ msbuild "CertificateGenerator Solution.sln" /p:Configuration=Release
 ECHO STEP 5) Sign the Binaries
 IF EXIST "%SIGNTOOL%" "%SIGNTOOL%" %INSTALLDIR%\bin\*.exe /dual
 
-ECHO *** ALL DONE ***
+ECHO STEP 6) ZIP the Binaries
+CD %INSTALLDIR%\bin
+%ZIP% a "CertificateGenerator 1.1.342.%BUILD_NUMBER%.zip" "*.exe"
+CD %SRCDIR%
+
+CD ECHO *** ALL DONE ***
 GOTO theEnd
 
 :theEnd
