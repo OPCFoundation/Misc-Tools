@@ -47,7 +47,6 @@ IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" %INSTALLDIR%\bin\*.exe /dual
 ECHO STEP 6) ZIP the Binaries
 CD %INSTALLDIR%\bin
 %ZIP% a "CertificateGenerator 1.1.342.%BUILD_NUMBER%.zip" "*.exe"
-CD %SRCDIR%
 
 CD ECHO *** ALL DONE ***
 GOTO theEnd
