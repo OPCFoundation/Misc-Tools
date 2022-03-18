@@ -7,7 +7,6 @@ SETLOCAL
 
 set SRCDIR=%~dp0
 set INSTALLDIR=%~dp0
-set GIT=C:\Program Files (x86)\Git\bin\git.exe
 set SIGNTOOL=C:\Build\sign_output.bat
 
 set GIT=C:\Program Files\Git\bin\git.exe
