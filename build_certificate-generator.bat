@@ -42,7 +42,7 @@ IF %BUILD_NUMBER% GTR 0 ECHO #define BUILD_NUMBER %BUILD_NUMBER% > CertificateGe
 msbuild "CertificateGenerator Solution.sln" /p:Configuration=Release 
 
 ECHO STEP 5) Sign the Binaries
-IF EXIST "%SIGNTOOL%" "%SIGNTOOL%" %INSTALLDIR%\bin\*.exe /dual
+IF EXIST "%SIGNTOOL%" CALL "%SIGNTOOL%" %INSTALLDIR%\bin\*.exe /dual
 
 ECHO STEP 6) ZIP the Binaries
 CD %INSTALLDIR%\bin
