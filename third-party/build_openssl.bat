@@ -17,7 +17,7 @@ IF "%1"=="no-clean" GOTO noClean
 IF EXIST %INSTALLDIR%\openssl rmdir /s /q %INSTALLDIR%\openssl
 
 ECHO STEP 1) Configure OpenSSL for VC-WIN32...
-%PERLEXE% .\Configure VC-WIN32 no-asm no-shared enable-capieng --prefix=%INSTALLDIR%\openssl --openssldir=%INSTALLDIR%\openssl
+%PERLEXE% .\Configure VC-WIN32 no-asm no-shared enable-capieng no-autoload-config --prefix=%INSTALLDIR%\openssl --openssldir=%INSTALLDIR%\openssl
 
 ECHO STEP 2) Creating Makefiles...
 nmake clean
