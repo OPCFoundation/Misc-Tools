@@ -31,7 +31,7 @@ ECHO STEP 3) Building OpenSSL
 cd %SRCDIR%
 CALL fetch_openssl.bat
 cd %SRCDIR%\third-party
-CALL build_win32.bat
+CALL build_openssl.bat
 :noClean
 
 :doBuild
