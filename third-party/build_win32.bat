@@ -1,6 +1,6 @@
 @echo off
 set ROOT=%~pd0
-set OPENSSL_SOURCEDIR=%ROOT%openssl-1.0.??
+set OPENSSL_SOURCEDIR=%ROOT%openssl-1.1.??
 set OPENSSL_INSTALDIR=%ROOT%openssl
 set MAKEFLAGS=
 
@@ -37,19 +37,6 @@ if errorlevel 1 goto error
 nmake -f ms\nt.mak install
 if errorlevel 1 goto error
 
-:ossl_done
-cd ..\Stack
-if errorlevel 1 goto error
-
-nmake -f win32_msc.mak clean
-if errorlevel 1 goto error
-
-nmake -f win32_msc.mak
-if errorlevel 1 goto error
-
-cd ..
-goto done
-
 :ossl_build
 set CONFIGURE_INSIST=1
 set PERL=perl
@@ -66,6 +53,10 @@ if errorlevel 1 goto error
 copy ..\openssl\lib\libcrypto.lib ..\openssl\lib\libeay32.lib
 copy ..\openssl\lib\libssl.lib ..\openssl\lib\ssleay32.lib
 goto ossl_done
+
+:ossl_done
+cd ..
+goto done
 
 :testroot
 if "%1" == "%ROOT%" exit /B 0
