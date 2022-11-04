@@ -1,45 +1,82 @@
-@ECHO off
-REM ****************************************************************************************************************
-REM ** This script builds the debug version of OpenSSL for use by the ANSI C samples.
-REM ** It requires that PERL be installed in the path and it must be run from a Visual Studio command line.
-REM ****************************************************************************************************************
-SETLOCAL
+@echo off
+set ROOT=%~pd0
+set OPENSSL_SOURCEDIR=%ROOT%openssl-1.1.??
+set OPENSSL_INSTALDIR=%ROOT%openssl
+set MAKEFLAGS=
 
-set PERLEXE=perl
-set SRCDIR=%~dp0\src\openssl
-set INSTALLDIR=%~dp0
+if not "%1" == "" goto help
 
-IF NOT EXIST %SRCDIR% GOTO noOpenSSL
+call :testroot %ROOT%
+if errorlevel 1 goto error0
 
-cd .\src\openssl
+nmake -? >NUL 2>&1
+if errorlevel 1 goto error1
 
-IF "%1"=="no-clean" GOTO noClean
-IF EXIST %INSTALLDIR%\openssl rmdir /s /q %INSTALLDIR%\openssl
+ml -? >NUL 2>&1
+if errorlevel 1 goto error1
 
-ECHO STEP 1) Configure OpenSSL for VC-WIN32...
-%PERLEXE% .\Configure VC-WIN32 no-asm no-shared enable-capieng no-autoload-config --prefix=%INSTALLDIR%\openssl --openssldir=%INSTALLDIR%\openssl
+perl -v >NUL 2>&1
+if errorlevel 1 goto error2
 
-ECHO STEP 2) Creating Makefiles...
-nmake clean
+cd /D %OPENSSL_SOURCEDIR% >NUL 2>&1
+if errorlevel 1 goto error3
 
-:noClean
+:ossl_build
+set CONFIGURE_INSIST=1
+set PERL=perl
 
-IF NOT EXIST %INSTALLDIR%\openssl MKDIR %INSTALLDIR%\openssl
+perl Configure VC-WIN32 no-asm no-shared enable-capieng no-autoload-config --prefix=%OPENSSL_INSTALDIR% --openssldir=%OPENSSL_INSTALDIR%
+if errorlevel 1 goto error
 
-ECHO STEP 3) Building OpenSSL
 nmake
+if errorlevel 1 goto error
 
-ECHO STEP 4) Install OpenSSL...
 nmake install
+if errorlevel 1 goto error
 
-ECHO *** ALL DONE ***
-GOTO theEnd
+copy ..\openssl\lib\libcrypto.lib ..\openssl\lib\libeay32.lib
+copy ..\openssl\lib\libssl.lib ..\openssl\lib\ssleay32.lib
+goto ossl_done
 
-:noOpenSSL
-ECHO.
-ECHO OpenSSL source not found. Please check the path.
-ECHO Searched for: %SRCDIR%
-GOTO theEnd
+:ossl_done
+cd ..
+goto done
 
-:theEnd
-ENDLOCAL
+:testroot
+if "%1" == "%ROOT%" exit /B 0
+exit /B 1
+
+:error0
+echo fatal error: cannot continue.
+echo the directory %ROOT% must not contain blanks
+goto done
+
+:error1
+echo fatal error: cannot continue.
+echo this batch has to be called from a
+echo 32bit visual studio command shell
+goto done
+
+:error2
+echo fatal error: cannot continue.
+echo perl has to be in the path
+goto done
+
+:error3
+cd /D %ROOT%openssl-1.1.?? >NUL 2>&1
+if not errorlevel 1 goto ossl_build
+echo fatal error: cannot continue.
+echo openssl sources must be at %OPENSSL_SOURCEDIR%
+goto done
+
+:error
+echo fatal error: cannot continue.
+
+:help
+echo this batch has to be called from a
+echo 32bit visual studio command shell
+echo the directory %ROOT% must not contain blanks
+echo openssl sources must be at %OPENSSL_SOURCEDIR%
+echo perl has to be in the path
+
+:done
