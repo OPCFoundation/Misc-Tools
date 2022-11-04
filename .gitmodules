@@ -1,6 +1,3 @@
 [submodule "CertificateGenerator/stack"]
 	path = CertificateGenerator/stack
 	url = https://github.com/OPCFoundation/UA-AnsiC
-[submodule "openssl"]
-	path = third-party/src/openssl
-	url = https://github.com/openssl/openssl.git
